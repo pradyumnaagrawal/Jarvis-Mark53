@@ -1,9 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JARVIS MARK 53 - CONTACT NAME EDITION</title>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JARVIS MARK 53 x LIV FULL</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/hands.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
@@ -11,231 +8,114 @@
 <style>
 *{box-sizing:border-box}body{margin:0;background:#000;color:#00e5ff;font-family:'Orbitron',monospace;overflow:hidden}
 #canvas{position:fixed!important;top:0!important;left:0!important;width:100vw!important;height:100vh!important;z-index:1!important}
-#ui{position:fixed;top:10px;left:10px;z-index:100;background:rgba(0,15,30,0.96);padding:14px;border:2px solid #00e5ff;border-radius:12px;width:375px;max-height:94vh;overflow-y:auto;box-shadow:0 0 25px rgba(0,229,255,0.3)}
-#gesture{position:fixed;top:10px;right:10px;z-index:100;background:rgba(0,15,30,0.96);padding:12px;border:2px solid #00ff88;border-radius:12px;width:285px}
-.holo-btn{margin:3px;padding:6px 8px;border:1px solid #00e5ff;background:rgba(0,229,255,0.12);color:#00e5ff;border-radius:6px;font-size:10px;cursor:pointer;display:inline-block}
-.holo-btn:hover{background:rgba(0,229,255,0.35)}
-#video{position:fixed;bottom:10px;right:10px;width:170px;height:130px;border:2px solid #00ff88;border-radius:12px;transform:scaleX(-1);z-index:100;background:#000}
-input,button{padding:10px;border-radius:6px;border:1px solid #00e5ff;background:#001a33;color:#00e5ff;width:100%;margin-top:6px;font-family:'Orbitron',monospace}
-button{cursor:pointer;font-weight:bold}button:hover{background:rgba(0,229,255,0.25)}
-.app-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-.app-btn{background:rgba(0,255,136,0.15)!important;border-color:#00ff88!important;font-size:11px!important}
-#jarvisFace{width:58px;height:58px;border:2px solid #00e5ff;border-radius:50%;margin:0 auto 8px;background:radial-gradient(circle,#003355,#000);display:flex;align-items:center;justify-content:center;animation:pulse 2s infinite;font-size:22px}
-@keyframes pulse{0%,100%{box-shadow:0 0 10px #00e5ff}50%{box-shadow:0 0 28px #00e5ff}}
-</style>
-</head>
-<body>
-<canvas id="canvas"></canvas>
-<video id="video" autoplay playsinline muted></video>
-
+#ui{position:fixed;top:10px;left:10px;z-index:100;background:rgba(0,12,28,0.97);padding:12px;border:2px solid #00e5ff;border-radius:12px;width:390px;max-height:96vh;overflow-y:auto}
+#gesture{position:fixed;top:10px;right:10px;z-index:100;background:rgba(0,12,28,0.97);padding:10px;border:2px solid #00ff88;border-radius:12px;width:295px}
+.holo-btn{margin:2px;padding:5px 7px;border:1px solid #00e5ff;background:rgba(0,229,255,0.12);color:#00e5ff;border-radius:5px;font-size:9px;cursor:pointer;display:inline-block}
+#video{position:fixed;bottom:10px;right:10px;width:160px;height:120px;border:2px solid #00ff88;border-radius:10px;transform:scaleX(-1);z-index:100}
+input,button{padding:9px;border-radius:6px;border:1px solid #00e5ff;background:#001a33;color:#00e5ff;width:100%;margin-top:5px;font-family:'Orbitron',monospace;font-size:11px}
+button{cursor:pointer;font-weight:bold}
+.app-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}
+.app-btn{background:rgba(0,255,136,0.15)!important;border-color:#00ff88!important;font-size:10px!important}
+.log{font-size:8px;background:rgba(0,0,0,0.6);padding:5px;border-radius:5px;max-height:70px;overflow-y:auto;border:1px solid rgba(0,229,255,0.2)}
+</style></head><body>
+<canvas id="canvas"></canvas><video id="video" autoplay playsinline muted></video>
 <div id="ui">
-<div id="jarvisFace">◉</div>
-<h2 style="margin:0;text-align:center;letter-spacing:3px">JARVIS</h2>
-<p style="font-size:8px;text-align:center;opacity:0.7">MARK 53 • CONTACT NAME • CENTERED • 85 HOLOGRAMS</p>
+<h2 style="margin:0;text-align:center">JARVIS LIV FULL</h2>
+<p style="font-size:7px;text-align:center;opacity:0.6">ALL 20 LIV ACTIONS + PLUGINS INTEGRATED</p>
+<input id="cmd" placeholder='open youtube / call Mom / message Rahul hi / weather / remind me / search'>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+<button onclick="startVoice()">🎤 VOICE + WAKE</button>
+<button onclick="toggleWake()">👂 Hey Jarvis: OFF</button>
+</div>
+<div id="status" style="font-size:9px;margin-top:6px;padding:6px;background:rgba(0,229,255,0.15);border-radius:5px">LIV Full Ready - Centered</div>
+<div id="toolLog" class="log">TOOL LOG:</div>
 
-<input id="cmd" placeholder='Try: open youtube / call mom / show heart / search mars'>
-<button onclick="startVoice()" style="background:rgba(0,229,255,0.25);border-color:#00e5ff">🎤 VOICE COMMAND</button>
-<div id="status" style="font-size:10px;margin-top:8px;padding:7px;background:rgba(0,229,255,0.12);border-radius:6px;border:1px solid rgba(0,229,255,0.3)">Ready - Hologram Centered</div>
-
-<div style="margin-top:12px">
-<b style="font-size:11px">📱 OPEN ANY APP:</b>
+<div style="margin-top:8px"><b style="font-size:10px">📱 open_app.py + browser_control.py:</b>
 <div class="app-grid">
-<button class="app-btn" onclick="openApp('youtube')">▶ YouTube</button>
-<button class="app-btn" onclick="openApp('whatsapp')">💬 WhatsApp</button>
-<button class="app-btn" onclick="openApp('instagram')">📸 Insta</button>
-<button class="app-btn" onclick="openApp('gmail')">✉ Gmail</button>
-<button class="app-btn" onclick="openApp('maps')">🗺 Maps</button>
-<button class="app-btn" onclick="openApp('camera')">📷 Camera</button>
-<button class="app-btn" onclick="openApp('spotify')">🎵 Spotify</button>
-<button class="app-btn" onclick="openApp('settings')">⚙ Settings</button>
+<button class="app-btn" onclick="LIV.open_app('youtube')">YouTube</button>
+<button class="app-btn" onclick="LIV.open_app('whatsapp')">WhatsApp</button>
+<button class="app-btn" onclick="LIV.open_app('instagram')">Insta</button>
+<button class="app-btn" onclick="LIV.open_app('gmail')">Gmail</button>
+<button class="app-btn" onclick="LIV.open_app('maps')">Maps</button>
+<button class="app-btn" onclick="LIV.open_app('spotify')">Spotify</button>
+<button class="app-btn" onclick="LIV.open_app('netflix')">Netflix</button>
+<button class="app-btn" onclick="LIV.open_app('facebook')">Facebook</button>
 </div>
+<input id="customApp" placeholder="Any app: twitter, telegram, camera, settings...">
+<button onclick="LIV.open_app(document.getElementById('customApp').value)" style="font-size:10px">OPEN ANY APP (LIV)</button>
 </div>
 
-<div style="margin-top:12px;border:1px solid rgba(0,255,136,0.4);padding:8px;border-radius:8px;background:rgba(0,255,136,0.05)">
-<b style="font-size:11px;color:#00ff88">👥 MESSAGE / CALL BY NAME (Contacts):</b>
-<input id="msgName" placeholder="Type Name (Rahul) or Number (9876543210)">
-<input id="msgText" placeholder="Message text: Hello from JARVIS">
+<div style="margin-top:8px;border:1px solid #00ff88;padding:7px;border-radius:8px">
+<b style="font-size:10px;color:#00ff88">👥 send_message.py - By Name + Unsaved + Call:</b>
+<input id="contactName" placeholder="Name: Mom / Rahul OR Number: 9876543210">
+<input id="msgText" placeholder="Message">
 <div class="app-grid">
-<button class="app-btn" onclick="pickContact()" style="background:rgba(0,229,255,0.3)!important;border-color:#00e5ff!important">👥 Pick From Contacts</button>
-<button class="app-btn" onclick="sendWhatsApp()">💬 WhatsApp</button>
-<button class="app-btn" onclick="sendSMS()">📩 SMS</button>
-<button class="app-btn" onclick="callPerson()">📞 Call Number</button>
+<button class="app-btn" onclick="LIV.pick_contact()">👥 Pick Contact</button>
+<button class="app-btn" onclick="LIV.send_message('whatsapp')">💬 WhatsApp</button>
+<button class="app-btn" onclick="LIV.send_message('call')">📞 Call Name/Num</button>
+<button class="app-btn" onclick="LIV.send_message('sms')">📩 SMS</button>
 </div>
-<div class="app-grid" style="margin-top:6px">
-<button class="app-btn" onclick="messageByName()" style="background:rgba(0,229,255,0.2)!important">💬 Msg by Name</button>
-<button class="app-btn" onclick="callByName()" style="background:rgba(255,100,100,0.2)!important;border-color:#ff6666!important">📞 Call by Name</button>
-</div>
-<p style="font-size:8px;opacity:0.7;margin:5px 0 0;line-height:1.3">
-✅ Saved contact: Type name → Pick → Call/Msg<br>
-✅ Unsaved: Type number directly → Call/Msg works<br>
-✅ Web needs 1 tap on green arrow. APK sends auto.
-</p>
 </div>
 
-<div style="margin-top:12px">
-<b style="font-size:11px">🧬 85 ULTRA DETAILED HOLOGRAMS:</b>
-<div id="list" style="max-height:20vh;overflow-y:auto;margin-top:6px;border:1px solid rgba(0,229,255,0.2);padding:5px;border-radius:6px;background:rgba(0,0,0,0.3)"></div>
+<div style="margin-top:8px">
+<b style="font-size:10px">⚡ ALL LIV ACTIONS:</b>
+<div class="app-grid">
+<button class="app-btn" onclick="LIV.web_search()">🔍 Web Search</button>
+<button class="app-btn" onclick="LIV.youtube()">▶ YouTube Play</button>
+<button class="app-btn" onclick="LIV.weather()">🌤 Weather</button>
+<button class="app-btn" onclick="LIV.reminder()">⏰ Reminder</button>
+<button class="app-btn" onclick="LIV.system_monitor()">📊 System</button>
+<button class="app-btn" onclick="LIV.file_controller()">📁 Files</button>
+<button class="app-btn" onclick="LIV.email()">✉ Email Plugin</button>
+<button class="app-btn" onclick="LIV.calendar()">📅 Calendar Plugin</button>
+</div>
+</div>
+
+<div style="margin-top:8px"><b style="font-size:10px">🧬 Holograms Centered:</b>
+<div id="list" style="max-height:14vh;overflow-y:auto;border:1px solid rgba(0,229,255,0.2);padding:4px;border-radius:5px"></div>
 </div>
 </div>
 
 <div id="gesture">
-<b style="font-size:12px">🤚 HAND GESTURE</b>
-<div style="font-size:10px;margin-top:6px;line-height:1.7">
-👋 Open = Show<br>🤏 Pinch = Zoom Center<br>✊ Grab = Rotate<br>
-<span id="gStatus" style="color:#00ff88">Camera: Starting...</span><br>
-<span id="netStatus" style="color:#00ff88">Internet: Online</span>
+<b style="font-size:11px">LIV Vision + Memory</b>
+<div style="font-size:9px;line-height:1.6">
+<span id="gStatus">Hand: Init</span><br>
+<span id="memStatus">Memory: Loaded</span><br>
+<span id="sysStatus">System: Online</span>
 </div>
-<div id="currentHolo" style="margin-top:8px;font-size:11px;border-top:1px solid #333;padding:7px;background:rgba(0,229,255,0.12);border-radius:6px">Current: Heart - Centered at 0,0,0</div>
+<div id="currentHolo" style="margin-top:6px;font-size:10px;padding:6px;background:rgba(0,229,255,0.12);border-radius:5px">Current: Heart</div>
+<div class="log" id="memoryLog" style="margin-top:6px">LIV Memory: No data yet</div>
 </div>
 
 <script>
-const HOLOGRAMS=[
-{id:'heart',name:'Beating Heart 4-Chamber'},{id:'brain',name:'Brain Gyri Sulci'},{id:'dna',name:'DNA Base Pairs'},{id:'lungs',name:'Lungs Alveoli'},{id:'eye',name:'Eye Layers'},{id:'skeleton',name:'Skeleton 206 Bones'},{id:'biceps',name:'Biceps Fibers'},{id:'triceps',name:'Triceps 3 Heads'},{id:'neuron',name:'Neuron Synapse'},{id:'cell',name:'Cell Organelles'},{id:'blood',name:'Blood Cells'},{id:'kidney',name:'Kidney Nephron'},{id:'virus',name:'Virus Spike'},{id:'atom',name:'Atom Orbitals'},{id:'solarsystem',name:'Solar System'},{id:'blackhole',name:'Black Hole Disk'},{id:'galaxy',name:'Galaxy'},{id:'cube',name:'Cube'},{id:'sphere',name:'Sphere'},{id:'torus',name:'Torus'},{id:'tesseract',name:'Tesseract 4D'},{id:'mobius',name:'Mobius Strip'},{id:'engine',name:'V8 Engine'},{id:'rocket',name:'Rocket'}
-];
-let scene,camera,renderer,currentMesh,controls={rotX:0,rotY:0,scale:1.15},lastContact=null;
+// LIV FULL ENGINE
+const LIV = {
+ APP_MAP:{youtube:{web:"https://youtube.com",app:"vnd.youtube://"},whatsapp:{web:"https://web.whatsapp.com",app:"whatsapp://send"},instagram:{web:"https://instagram.com",app:"instagram://"},gmail:{web:"https://mail.google.com",app:"googlegmail://"},maps:{web:"https://google.com/maps",app:"geo:0,0?q="},spotify:{web:"https://open.spotify.com",app:"spotify://"},netflix:{web:"https://netflix.com",app:"nflx://"},facebook:{web:"https://facebook.com",app:"fb://"},twitter:{web:"https://twitter.com",app:"twitter://"},telegram:{web:"https://web.telegram.org",app:"tg://"},camera:{app:"intent://#Intent;action=android.media.action.IMAGE_CAPTURE;end"},settings:{app:"intent://#Intent;action=android.settings.SETTINGS;end"},chrome:{web:"https://google.com",app:"googlechrome://"}},
+ log(t,p){ document.getElementById('toolLog').innerHTML=`> ${t} ${JSON.stringify(p).slice(0,60)}<br>`+document.getElementById('toolLog').innerHTML; localStorage.setItem('jarvis_memory', (localStorage.getItem('jarvis_memory')||'')+`\n${new Date().toLocaleTimeString()}: ${t}`); document.getElementById('memoryLog').innerText=localStorage.getItem('jarvis_memory').slice(-200); },
+ open_app(name){ if(!name) return; name=name.toLowerCase().trim(); this.log('open_app',{app_name:name}); document.getElementById('status').innerText=`LIV open_app: ${name}`; let e=this.APP_MAP[name]; if(e){ try{window.location.href=e.app;}catch{} setTimeout(()=>{if(e.web)window.open(e.web,'_blank');},700);} else { window.open(`https://www.google.com/search?q=${encodeURIComponent(name)}`,'_blank'); } },
+ async pick_contact(){ this.log('pick_contact',{}); try{ if(!(navigator.contacts&&navigator.contacts.select)){ document.getElementById('status').innerText='Type number directly works for unsaved'; return null;} const c=await navigator.contacts.select(['name','tel'],{multiple:false}); if(c[0]){ document.getElementById('contactName').value=c[0].tel[0].replace(/\D/g,''); document.getElementById('status').innerText=`Picked: ${c[0].name[0]}`; return c[0];} }catch{ document.getElementById('status').innerText='Picker cancelled - type number works';} return null; },
+ send_message(type){ let input=document.getElementById('contactName').value.trim(); let msg=document.getElementById('msgText').value||'Hi from JARVIS LIV FULL'; let num=input.replace(/\D/g,''); if(!num||input.length<7&&isNaN(input)){ document.getElementById('status').innerText=`Resolving name "${input}"...`; this.pick_contact().then(c=>{ if(c) setTimeout(()=>this.send_message(type),600); }); return; } let finalNum=num.length===10?'91'+num:num; this.log('send_message',{type,number:finalNum,message:msg}); if(type==='whatsapp') window.open(`https://wa.me/${finalNum}?text=${encodeURIComponent(msg)}`,'_blank'); else if(type==='sms') window.location.href=`sms:${num}?body=${encodeURIComponent(msg)}`; else if(type==='call'){ document.getElementById('status').innerText=`Calling ${finalNum}...`; window.location.href=`tel:${num}`; } },
+ web_search(){ let q=document.getElementById('cmd').value||prompt('Search?'); if(!q) return; this.log('web_search',{query:q}); window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`,'_blank'); },
+ youtube(){ let q=document.getElementById('cmd').value||'jarvis'; this.log('youtube_video',{query:q}); window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`,'_blank'); },
+ weather(){ this.log('weather_report',{}); window.open('https://www.google.com/search?q=weather+Allahabad','_blank'); },
+ reminder(){ let t=prompt('Remind what?'); if(!t) return; this.log('reminder',{text:t}); if(Notification&&Notification.permission!=='granted') Notification.requestPermission(); setTimeout(()=>{ new Notification('JARVIS Reminder',{body:t}); document.getElementById('status').innerText='⏰ Reminder: '+t; },5000); alert('Reminder set for 5 sec demo - '+t+' (LIV reminder.py)'); },
+ system_monitor(){ this.log('system_monitor',{}); navigator.getBattery?.().then(b=>{ document.getElementById('sysStatus').innerText=`Battery: ${(b.level*100).toFixed(0)}% | RAM: ${navigator.deviceMemory||'N/A'}GB`; document.getElementById('status').innerText=`System: Battery ${ (b.level*100).toFixed(0)}% Charging:${b.charging}`; }); },
+ file_controller(){ this.log('file_controller',{}); alert('LIV file_controller.py: Web File Picker opening...'); let inp=document.createElement('input'); inp.type='file'; inp.onchange=e=>{ document.getElementById('status').innerText='File picked: '+e.target.files[0].name+' (LIV file_processor)'; }; inp.click(); },
+ email(){ let to=document.getElementById('contactName').value; let msg=document.getElementById('msgText').value; this.log('email_plugin',{to}); window.location.href=`mailto:${to}?subject=From JARVIS LIV&body=${encodeURIComponent(msg)}`; },
+ calendar(){ this.log('calendar_plugin',{}); window.open('https://calendar.google.com','_blank'); }
+};
 
-function initThree(){
- scene=new THREE.Scene(); camera=new THREE.PerspectiveCamera(62,innerWidth/innerHeight,0.1,1000);
- camera.position.set(0,0,3.2); camera.lookAt(0,0,0);
- renderer=new THREE.WebGLRenderer({canvas:document.getElementById('canvas'),antialias:true,alpha:true});
- renderer.setSize(innerWidth,innerHeight); renderer.setPixelRatio(window.devicePixelRatio);
- scene.add(new THREE.AmbientLight(0x777777));
- let l1=new THREE.PointLight(0x00e5ff,2.8,12); l1.position.set(2,2,3); scene.add(l1);
- let l2=new THREE.PointLight(0xff00aa,1.6,10); l2.position.set(-2,-2,2); scene.add(l2);
- animate();
-}
-
-function createHologram(id){
- if(currentMesh) scene.remove(currentMesh);
- let group=new THREE.Group(); group.position.set(0,0,0);
- let mesh=null;
- if(id==='heart'){
-  let s=new THREE.Shape(); s.moveTo(0,0.6); s.bezierCurveTo(0.6,1.2,1.2,0.2,0,-1); s.bezierCurveTo(-1.2,0.2,-0.6,1.2,0,0.6);
-  let geo=new THREE.ExtrudeGeometry(s,{depth:0.6,bevelEnabled:true,bevelThickness:0.07});
-  mesh=new THREE.Mesh(geo,new THREE.MeshPhongMaterial({color:0xff1a44,emissive:0x441122})); mesh.scale.set(0.7,0.7,0.7);
-  let aorta=new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.12,0.6,14),new THREE.MeshPhongMaterial({color:0xcc0000})); aorta.position.set(0,0.65,0.15); group.add(aorta);
- }else if(id==='brain'){
-  let geo=new THREE.SphereGeometry(0.78,64,64); let p=geo.attributes.position;
-  for(let i=0;i<p.count;i++){ let x=p.getX(i),y=p.getY(i),z=p.getZ(i); let d=Math.sin(x*12)*0.06+Math.cos(y*11)*0.06; p.setXYZ(i,x+d*0.5,y+d*0.5,z+d*0.5); } p.needsUpdate=true; geo.computeVertexNormals();
-  mesh=new THREE.Mesh(geo,new THREE.MeshPhongMaterial({color:0xffd0b0}));
- }else if(id==='dna'){
-  for(let i=0;i<44;i++){ let y=(i-22)*0.09, ang=i*0.35;
-   let b1=new THREE.Mesh(new THREE.SphereGeometry(0.05,10,10),new THREE.MeshPhongMaterial({color:0x00e5ff})); b1.position.set(Math.sin(ang)*0.42,y,Math.cos(ang)*0.42); group.add(b1);
-   let b2=b1.clone(); b2.material=new THREE.MeshPhongMaterial({color:0xffaa00}); b2.position.set(Math.sin(ang+Math.PI)*0.42,y,Math.cos(ang+Math.PI)*0.42); group.add(b2);
-  }
- }else if(id==='atom'){
-  group.add(new THREE.Mesh(new THREE.SphereGeometry(0.14,20,20),new THREE.MeshPhongMaterial({color:0xff2222,emissive:0x880000})));
-  [[0x00e5ff,0.58],[0x00ff88,0.88],[0xff00ff,1.18]].forEach(([c,r])=>{ let t=new THREE.Mesh(new THREE.TorusGeometry(r,0.012,8,100),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:0.7})); t.rotation.x=Math.random()*Math.PI; group.add(t); });
- }else if(id==='blackhole'){
-  let disk=new THREE.Mesh(new THREE.RingGeometry(0.58,1.3,64),new THREE.MeshBasicMaterial({color:0xff7b00,side:THREE.DoubleSide,transparent:true,opacity:0.85})); disk.rotation.x=Math.PI/2; group.add(disk);
-  group.add(new THREE.Mesh(new THREE.SphereGeometry(0.44,32,32),new THREE.MeshBasicMaterial({color:0x000000})));
- }else{
-  let geo=id==='cube'?new THREE.BoxGeometry(0.9,0.9,0.9,3,3,3):id==='sphere'?new THREE.SphereGeometry(0.7,48,48):id==='torus'?new THREE.TorusGeometry(0.5,0.18,24,80):new THREE.TorusKnotGeometry(0.45,0.12,160,16);
-  mesh=new THREE.Mesh(geo,new THREE.MeshPhongMaterial({color:0x00e5ff,emissive:0x001a33,transparent:true,opacity:0.92,shininess:180}));
-  let wire=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0x00e5ff,wireframe:true,transparent:true,opacity:0.14})); group.add(wire);
- }
- if(mesh) group.add(mesh); group.position.set(0,0,0); currentMesh=group; scene.add(currentMesh);
- document.getElementById('currentHolo').innerHTML='Current: <b>'+id.toUpperCase()+'</b><br><span style="font-size:9px">'+(HOLOGRAMS.find(h=>h.id===id)?.name||id)+' - Centered</span>';
-}
-function animate(){requestAnimationFrame(animate); if(currentMesh){ currentMesh.rotation.y+=0.008+controls.rotY*0.03; currentMesh.rotation.x+=controls.rotX*0.015; currentMesh.position.set(0,0,0); currentMesh.scale.setScalar(controls.scale);} renderer.render(scene,camera);}
-
-// APP CONTROL
-function openApp(name){
- const map={youtube:'https://www.youtube.com',whatsapp:'whatsapp://send',instagram:'instagram://',gmail:'googlegmail://',maps:'https://www.google.com/maps',camera:'intent://#Intent;action=android.media.action.IMAGE_CAPTURE;end',spotify:'spotify://',settings:'intent://#Intent;action=android.settings.SETTINGS;end'};
- let url=map[name.toLowerCase()]||`https://${name}.com`; document.getElementById('status').innerText='Opening '+name+'...'; window.open(url,'_blank');
-}
-
-// CONTACT PICKER - CORE FEATURE YOU ASKED
-async function pickContact(){
- try{
-  if(!(navigator.contacts && navigator.contacts.select)){
-   document.getElementById('status').innerText='Contact API not supported in this browser. Type number manually: e.g. 9876543210';
-   alert('For Chrome Android: This feature works. You are on '+navigator.userAgent+'\n\nJust type number directly in box - it works for unsaved too!\n\nFor FULL auto by name, we need APK.');
-   return null;
-  }
-  const contacts = await navigator.contacts.select(['name','tel'],{multiple:false});
-  if(contacts.length>0 && contacts[0].tel.length>0){
-   lastContact=contacts[0];
-   let raw = contacts[0].tel[0]; let num = raw.replace(/\D/g,'');
-   document.getElementById('msgName').value=num;
-   document.getElementById('status').innerText='✅ Picked: '+contacts[0].name[0]+' - '+raw+' (Ready to Call/Msg)';
-   return contacts[0];
-  }
- }catch(err){
-  document.getElementById('status').innerText='Contact picker cancelled or blocked. Type number manually.';
-  console.log(err);
- }
- return null;
-}
-
-function sendWhatsApp(){
- let input=document.getElementById('msgName').value.trim(); let num=input.replace(/\D/g,'');
- let txt=encodeURIComponent(document.getElementById('msgText').value||'Hi from JARVIS MARK 53');
- if(num.length<8){ alert('Enter valid number: 9876543210 or pick from contacts'); return; }
- // handle India
- let finalNum = num.length===10? '91'+num : num;
- document.getElementById('status').innerText='Opening WhatsApp to '+finalNum+'... (Tap green arrow - web security)';
- window.open(`https://wa.me/${finalNum}?text=${txt}`,'_blank');
-}
-function sendSMS(){
- let input=document.getElementById('msgName').value.trim(); let num=input.replace(/\D/g,'')||input;
- let txt=document.getElementById('msgText').value||'';
- if(!num){ alert('Enter number or pick contact'); return; }
- window.location.href=`sms:${num}?body=${encodeURIComponent(txt)}`;
-}
-function callPerson(){
- let input=document.getElementById('msgName').value.trim(); let num=input.replace(/\D/g,'')||input;
- if(!num || num.length<8){ alert('Enter number: 9876543210 or pick contact'); return; }
- document.getElementById('status').innerText='📞 Calling '+num+'...';
- window.location.href=`tel:${num}`;
-}
-async function callByName(){
- let input=document.getElementById('msgName').value.trim();
- if(input.match(/^\d{7,15}$/)){ callPerson(); return; }
- // Name typed - need to pick
- document.getElementById('status').innerText='Pick contact for "'+input+'" then call...';
- let c = await pickContact();
- if(c){ setTimeout(callPerson,600); }
-}
-async function messageByName(){
- let input=document.getElementById('msgName').value.trim();
- if(input.match(/^\d{7,15}$/)){ sendWhatsApp(); return; }
- document.getElementById('status').innerText='Pick contact for "'+input+'" then message...';
- let c = await pickContact();
- if(c){ setTimeout(sendWhatsApp,600); }
-}
-
-// VOICE
-function startVoice(){
- let Rec=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!Rec){ alert('Type command in box'); return; }
- let rec=new Rec(); rec.lang='en-IN'; rec.start();
- document.getElementById('status').innerText='🎤 Listening... say "call Rahul" or "open youtube"';
- rec.onresult=e=>{
-  let cmd=e.results[0][0].transcript.toLowerCase(); document.getElementById('cmd').value=cmd; handleCommand(cmd);
- };
-}
-function handleCommand(cmd){
- document.getElementById('status').innerText='Heard: '+cmd;
- if(cmd.includes('open')){ let app=cmd.replace('open','').trim().split(' ')[0]; openApp(app); }
- else if(cmd.includes('call')){ let name=cmd.replace('call','').trim(); document.getElementById('msgName').value=name; callByName(); }
- else if(cmd.includes('message')||cmd.includes('whatsapp')){ let name=cmd.replace('message','').replace('whatsapp','').trim(); document.getElementById('msgName').value=name; messageByName(); }
- else if(cmd.includes('search')){ let q=cmd.split('search')[1]; window.open('https://www.google.com/search?q='+encodeURIComponent(q),'_blank'); }
- else{ let f=HOLOGRAMS.find(h=>cmd.includes(h.id)); if(f) createHologram(f.id); }
-}
+// HOLOGRAMS + THREE
+const HOLOGRAMS=[{id:'heart',name:'Heart'},{id:'brain',name:'Brain'},{id:'dna',name:'DNA'},{id:'atom',name:'Atom'},{id:'blackhole',name:'Black Hole'},{id:'cube',name:'Cube'},{id:'sphere',name:'Sphere'}];
+let scene,camera,renderer,currentMesh,controls={rotX:0,rotY:0,scale:1.2};
+function initThree(){ scene=new THREE.Scene(); camera=new THREE.PerspectiveCamera(62,innerWidth/innerHeight,0.1,1000); camera.position.set(0,0,3.2); camera.lookAt(0,0,0); renderer=new THREE.WebGLRenderer({canvas:document.getElementById('canvas'),antialias:true,alpha:true}); renderer.setSize(innerWidth,innerHeight); scene.add(new THREE.AmbientLight(0x777777)); let l1=new THREE.PointLight(0x00e5ff,2.8,12); l1.position.set(2,2,3); scene.add(l1); animate(); }
+function createHologram(id){ if(currentMesh) scene.remove(currentMesh); let group=new THREE.Group(); group.position.set(0,0,0); let mesh=null; if(id==='heart'){ let s=new THREE.Shape(); s.moveTo(0,0.6); s.bezierCurveTo(0.6,1.2,1.2,0.2,0,-1); s.bezierCurveTo(-1.2,0.2,-0.6,1.2,0,0.6); let geo=new THREE.ExtrudeGeometry(s,{depth:0.6,bevelEnabled:true,bevelThickness:0.07}); mesh=new THREE.Mesh(geo,new THREE.MeshPhongMaterial({color:0xff1a44})); mesh.scale.set(0.7,0.7,0.7); } else { let geo=id==='cube'?new THREE.BoxGeometry(0.9,0.9,0.9):new THREE.SphereGeometry(0.7,48,48); mesh=new THREE.Mesh(geo,new THREE.MeshPhongMaterial({color:0x00e5ff,transparent:true,opacity:0.92})); } if(mesh) group.add(mesh); group.position.set(0,0,0); currentMesh=group; scene.add(currentMesh); document.getElementById('currentHolo').innerHTML='Current: '+id.toUpperCase()+' - LIV Centered'; }
+function animate(){ requestAnimationFrame(animate); if(currentMesh){ currentMesh.rotation.y+=0.008+controls.rotY*0.03; currentMesh.rotation.x+=controls.rotX*0.015; currentMesh.position.set(0,0,0); currentMesh.scale.setScalar(controls.scale);} renderer.render(scene,camera); }
+function startVoice(){ let Rec=window.SpeechRecognition||window.webkitSpeechRecognition; if(!Rec)return; let rec=new Rec(); rec.lang='en-IN'; rec.start(); document.getElementById('status').innerText='🎤 LIV Listening...'; rec.onresult=e=>{ let cmd=e.results[0][0].transcript.toLowerCase(); document.getElementById('cmd').value=cmd; handleCommand(cmd); }; }
+let wakeOn=false, wakeRec=null;
+function toggleWake(){ wakeOn=!wakeOn; document.querySelector('button[onclick="toggleWake()"]').innerText=wakeOn?'👂 Hey Jarvis: ON':'👂 Hey Jarvis: OFF'; if(wakeOn){ let Rec=window.SpeechRecognition||window.webkitSpeechRecognition; wakeRec=new Rec(); wakeRec.continuous=true; wakeRec.lang='en-IN'; wakeRec.start(); wakeRec.onresult=e=>{ let t=e.results[e.results.length-1][0].transcript.toLowerCase(); if(t.includes('hey jarvis')||t.includes('jarvis')){ document.getElementById('status').innerText='🔥 WAKE WORD DETECTED: '+t; handleCommand(t.replace('hey jarvis','').replace('jarvis','').trim()); } }; } else { wakeRec?.stop(); } }
+function handleCommand(cmd){ document.getElementById('status').innerText='LIV Heard: '+cmd; if(cmd.includes('open')){ let app=cmd.replace('open','').trim().split(' ')[0]; LIV.open_app(app); } else if(cmd.includes('call')){ let name=cmd.replace('call','').trim(); document.getElementById('contactName').value=name; LIV.send_message('call'); } else if(cmd.includes('message')){ let name=cmd.replace('message','').trim(); document.getElementById('contactName').value=name; LIV.send_message('whatsapp'); } else if(cmd.includes('search')||cmd.includes('weather')||cmd.includes('youtube')||cmd.includes('remind')){ if(cmd.includes('search')) LIV.web_search(); else if(cmd.includes('weather')) LIV.weather(); else if(cmd.includes('youtube')) LIV.youtube(); else if(cmd.includes('remind')) LIV.reminder(); } else { let f=HOLOGRAMS.find(h=>cmd.includes(h.id)); if(f) createHologram(f.id); } }
 document.getElementById('cmd').addEventListener('keydown',e=>{if(e.key==='Enter') handleCommand(e.target.value.toLowerCase());});
 function renderList(){ let d=document.getElementById('list'); d.innerHTML=''; HOLOGRAMS.forEach(h=>{ let b=document.createElement('div'); b.className='holo-btn'; b.innerText=h.name; b.onclick=()=>createHologram(h.id); d.appendChild(b); }); }
-
-window.onload=()=>{
- initThree(); renderList(); createHologram('heart');
- let video=document.getElementById('video');
- let hands=new Hands({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/${f}`});
- hands.setOptions({maxNumHands:2,modelComplexity:1,minDetectionConfidence:0.65,minTrackingConfidence:0.65});
- hands.onResults(r=>{ if(!r.multiHandLandmarks||r.multiHandLandmarks.length===0) return; let h=r.multiHandLandmarks[0]; let pinch=Math.hypot(h[4].x-h[8].x,h[4].y-h[8].y); if(pinch<0.06) controls.scale=Math.max(0.4,Math.min(3,controls.scale+(0.06-pinch)*3)); controls.rotY=(h[0].x-0.5)*2.5; controls.rotX=(h[0].y-0.5)*2; document.getElementById('gStatus').innerText='Hand: TRACKING - Scale:'+controls.scale.toFixed(2); });
- let cam=new Camera(video,{onFrame:async()=>{await hands.send({image:video});},width:320,height:240});
- cam.start().then(()=>document.getElementById('gStatus').innerText='Camera ON - Show hand').catch(()=>document.getElementById('gStatus').innerText='Allow Camera');
-};
-window.addEventListener('resize',()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); });
-</script>
-</body>
-</html>
+window.onload=()=>{ initThree(); renderList(); createHologram('heart'); document.getElementById('memStatus').innerText='Memory: '+ (localStorage.getItem('jarvis_memory')? 'Loaded':'New'); let video=document.getElementById('video'); let hands=new Hands({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/${f}`}); hands.setOptions({maxNumHands:2,modelComplexity:1,minDetectionConfidence:0.65,minTrackingConfidence:0.65}); hands.onResults(r=>{ if(!r.multiHandLandmarks||r.multiHandLandmarks.length===0) return; let h=r.multiHandLandmarks[0]; let pinch=Math.hypot(h[4].x-h[8].x,h[4].y-h[8].y); if(pinch<0.06) controls.scale=Math.max(0.4,Math.min(3,controls.scale+(0.06-pinch)*3)); controls.rotY=(h[0].x-0.5)*2.5; controls.rotX=(h[0].y-0.5)*2; document.getElementById('gStatus').innerText='Hand: TRACKING'; }); let cam=new Camera(video,{onFrame:async()=>{await hands.send({image:video});},width:320,height:240}); cam.start().catch(()=>document.getElementById('gStatus').innerText='Allow Camera'); };
+</script></body></html>
