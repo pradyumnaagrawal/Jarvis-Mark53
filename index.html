@@ -3,65 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Jarvis-Mark53 3D Auto</title>
+<title>Jarvis-Mark53 3D AI Brain</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<script type="importmap">
-{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}
-</script>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#02040a;color:#8ec8d8;font-family:'Share Tech Mono',monospace;height:100vh;overflow:hidden}
 #app{height:100vh;display:flex;flex-direction:column;position:relative}
 #three-canvas{position:absolute;inset:0;z-index:0}
 .ui-layer{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;pointer-events:none}
-.top{height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(0,229,255,0.18);background:rgba(2,4,10,0.75);backdrop-filter:blur(16px);pointer-events:auto}
-.top h1{font-family:'Orbitron';font-size:13px;letter-spacing:4px;color:#00e5ff;text-shadow:0 0 20px #00e5ff,0 0 40px #00e5ff;font-weight:700}
-.icon-btn{width:38px;height:38px;border:1px solid rgba(0,229,255,0.3);background:rgba(0,229,255,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#00e5ff;backdrop-filter:blur(12px);transition:0.2s}
-.icon-btn:hover{background:rgba(0,229,255,0.22);box-shadow:0 0 20px rgba(0,229,255,0.5);transform:translateY(-1px)}
-.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;pointer-events:none}
-.hud-ring{width:380px;height:380px;position:relative;display:flex;align-items:center;justify-content:center}
-.hud-label{position:absolute;color:#00e5ff;font-size:8px;letter-spacing:2px;text-shadow:0 0 12px #00e5ff;opacity:0.9;font-family:'Orbitron'}
-.input-wrap{margin-top:24px;width:640px;max-width:92vw;display:flex;gap:12px;pointer-events:auto}
-.input-wrap input{flex:1;padding:15px 20px;background:rgba(0,20,40,0.6);border:1px solid rgba(0,229,255,0.35);border-radius:16px;color:#e8ffff;font-family:'Share Tech Mono';font-size:13px;backdrop-filter:blur(24px);box-shadow:0 0 40px rgba(0,229,255,0.12), inset 0 0 24px rgba(0,229,255,0.06)}
-.input-wrap input:focus{outline:none;border-color:#00e5ff;box-shadow:0 0 50px rgba(0,229,255,0.35)}
-.input-wrap button{padding:15px 22px;background:rgba(0,229,255,0.14);border:1px solid rgba(0,229,255,0.45);border-radius:16px;color:#00e5ff;cursor:pointer;backdrop-filter:blur(20px);font-family:'Orbitron';font-size:11px;letter-spacing:1px}
-.input-wrap button:hover{background:rgba(0,229,255,0.22)}
-.bottom{height:146px;border-top:1px solid rgba(0,229,255,0.14);background:rgba(0,0,0,0.5);backdrop-filter:blur(24px);display:flex;pointer-events:auto}
-.log-panel{flex:1;padding:12px 16px;font-size:10px;overflow-y:auto;line-height:1.8;font-family:monospace}
-.content-preview{width:360px;border-left:1px solid rgba(0,229,255,0.14);padding:14px;font-size:10px;overflow-y:auto;background:rgba(0,20,40,0.28)}
-#drawer{position:fixed;top:0;right:-440px;width:420px;height:100vh;background:rgba(8,14,24,0.97);border-left:1px solid rgba(0,229,255,0.28);z-index:10;transition:0.45s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;backdrop-filter:blur(32px);pointer-events:auto}
+.top{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(0,229,255,0.18);background:rgba(2,4,10,0.8);backdrop-filter:blur(16px);pointer-events:auto}
+.top h1{font-family:'Orbitron';font-size:12px;letter-spacing:4px;color:#00e5ff;text-shadow:0 0 20px #00e5ff;font-weight:700}
+.icon-btn{width:38px;height:38px;border:1px solid rgba(0,229,255,0.3);background:rgba(0,229,255,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#00e5ff}
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:18px;pointer-events:none;overflow:hidden}
+.hud-ring{width:320px;height:140px;position:relative;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.chat-wrap{width:680px;max-width:94vw;height:380px;background:rgba(0,12,28,0.55);border:1px solid rgba(0,229,255,0.25);border-radius:20px;backdrop-filter:blur(28px);display:flex;flex-direction:column;pointer-events:auto;box-shadow:0 0 60px rgba(0,229,255,0.15), inset 0 0 30px rgba(0,229,255,0.05)}
+.chat-header{height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(0,229,255,0.15);font-family:'Orbitron';font-size:9px;letter-spacing:2px}
+.chat-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:88%;padding:10px 14px;border-radius:14px;font-size:12px;line-height:1.6}
+.msg.user{align-self:flex-end;background:rgba(0,229,255,0.15);border:1px solid rgba(0,229,255,0.3);color:#c8f8ff}
+.msg.jarvis{align-self:flex-start;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.25);color:#a8ffd0}
+.msg.system{align-self:center;background:rgba(255,255,255,0.04);border:1px dashed rgba(0,229,255,0.2);font-size:10px;opacity:0.7}
+.input-wrap{margin-top:14px;width:680px;max-width:94vw;display:flex;gap:10px;pointer-events:auto}
+.input-wrap input{flex:1;padding:14px 18px;background:rgba(0,20,40,0.6);border:1px solid rgba(0,229,255,0.35);border-radius:16px;color:#e8ffff;font-size:13px;backdrop-filter:blur(24px)}
+.input-wrap input:focus{outline:none;border-color:#00e5ff;box-shadow:0 0 40px rgba(0,229,255,0.3)}
+.input-wrap button{padding:14px 20px;background:rgba(0,229,255,0.14);border:1px solid rgba(0,229,255,0.45);border-radius:16px;color:#00e5ff;cursor:pointer;font-family:'Orbitron';font-size:10px}
+.bottom{height:120px;border-top:1px solid rgba(0,229,255,0.14);background:rgba(0,0,0,0.5);backdrop-filter:blur(24px);display:flex;pointer-events:auto}
+.log-panel{flex:1;padding:10px 14px;font-size:9px;overflow-y:auto;line-height:1.6}
+.content-preview{width:340px;border-left:1px solid rgba(0,229,255,0.14);padding:12px;font-size:10px;overflow-y:auto;background:rgba(0,20,40,0.28)}
+#drawer{position:fixed;top:0;right:-440px;width:420px;height:100vh;background:rgba(8,14,24,0.98);border-left:1px solid rgba(0,229,255,0.28);z-index:10;transition:0.45s;display:flex;flex-direction:column;backdrop-filter:blur(32px);pointer-events:auto}
 #drawer.open{right:0}#overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9;display:none}#overlay.show{display:block}
 .drawer-header{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(0,229,255,0.18)}
-.tab-row{display:flex;gap:6px;padding:12px}.tab{flex:1;padding:9px;border:1px solid rgba(0,229,255,0.22);background:rgba(0,229,255,0.06);border-radius:12px;font-size:9px;cursor:pointer;text-align:center;font-family:'Orbitron';letter-spacing:1px}.tab.active{background:rgba(0,229,255,0.18);color:#00e5ff;border-color:rgba(0,229,255,0.5)}
+.tab-row{display:flex;gap:6px;padding:12px}.tab{flex:1;padding:9px;border:1px solid rgba(0,229,255,0.22);background:rgba(0,229,255,0.06);border-radius:12px;font-size:9px;cursor:pointer;text-align:center;font-family:'Orbitron'}.tab.active{background:rgba(0,229,255,0.18);color:#00e5ff}
 .drawer-content{flex:1;overflow-y:auto;padding:14px}
-.btn{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(0,229,255,0.32);background:rgba(0,229,255,0.09);color:#00e5ff;font-size:11px;cursor:pointer;margin-top:8px;text-align:left;backdrop-filter:blur(12px);transition:0.2s}
-.btn:hover{background:rgba(0,229,255,0.16)}.btn-green{border-color:rgba(0,255,136,0.35)!important;background:rgba(0,255,136,0.1)!important;color:#8effc8!important}
+.btn{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(0,229,255,0.32);background:rgba(0,229,255,0.09);color:#00e5ff;font-size:11px;cursor:pointer;margin-top:8px;text-align:left}
+.btn-green{border-color:rgba(0,255,136,0.35)!important;background:rgba(0,255,136,0.1)!important;color:#8effc8!important}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 input.small{padding:11px;border-radius:12px;border:1px solid rgba(0,229,255,0.28);background:rgba(0,20,40,0.65);color:#c8f8ff;width:100%;margin-top:8px;font-size:11px}
-.tag{font-size:8px;padding:4px 10px;border:1px solid rgba(0,229,255,0.28);border-radius:14px;background:rgba(0,229,255,0.1);letter-spacing:1px}
+.tag{font-size:8px;padding:4px 10px;border:1px solid rgba(0,229,255,0.28);border-radius:14px;background:rgba(0,229,255,0.1)}
+.typing{display:flex;gap:4px;padding:8px}.dot{width:6px;height:6px;background:#00e5ff;border-radius:50%;animation:bounce 1.4s infinite}.dot:nth-child(2){animation-delay:0.2s}.dot:nth-child(3){animation-delay:0.4s}@keyframes bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
 </style>
 </head>
 <body>
 <div id="app">
 <canvas id="three-canvas"></canvas>
 <div class="ui-layer">
-<div class="top"><div style="display:flex;align-items:center;gap:14px"><div style="width:11px;height:11px;border-radius:50%;background:#00ff88;box-shadow:0 0 14px #00ff88"></div><h1>JARVIS MARK-53 • 3D HOLOGRAM • AUTO</h1><span class="tag" id="memTag">MEM 0</span><span class="tag" id="autoTag">AUTO ON</span></div><div style="display:flex;gap:10px"><div class="icon-btn" onclick="JARVIS.voice()">🎤</div><div class="icon-btn" onclick="JARVIS.wakeToggle()"><span id="wakeIcon">👂</span></div><div class="icon-btn" onclick="toggleDrawer()">⚙</div></div></div>
-<div class="center"><div class="hud-ring"><div class="hud-label" style="top:12px;left:50%;transform:translateX(-50%)">SYS • ONLINE • GEMINI 3.1 FLASH</div><div class="hud-label" style="bottom:12px;left:50%;transform:translateX(-50%)">STARK INDUSTRIES • MARK-53 • VOLUMETRIC</div><div class="hud-label" style="left:-10px;top:50%;transform:translateY(-50%) rotate(-90deg)">DEPTH: ACTIVE</div><div class="hud-label" style="right:-10px;top:50%;transform:translateY(-50%) rotate(90deg)">HOLOGRAM: TRUE 3D</div></div><div class="input-wrap"><input id="cmd" placeholder="Try: message mummy hii / call mummy / open youtube — Auto + 3D"><button onclick="JARVIS.sendCmd()">EXEC</button><button onclick="JARVIS.voice()">VOICE</button></div><div id="status" style="margin-top:18px;font-size:11px;text-shadow:0 0 14px #00e5ff;letter-spacing:0.5px">● 3D Volumetric HUD • 800 Particles • Glass Layers • Mouse Parallax • Auto Contacts</div></div>
-<div class="bottom"><div class="log-panel" id="log"></div><div class="content-preview" id="content"><b style="color:#00e5ff">3D HOLOGRAM HUD</b><br>• Three.js WebGL • Depth layers<br>• 800 particles • Grid floor<br>• Mouse moves → 3D parallax<br>• Reactor pulses to voice<br><br><b>Auto contacts:</b> Save once → auto forever</div></div>
+<div class="top"><div style="display:flex;align-items:center;gap:12px"><div style="width:11px;height:11px;border-radius:50%;background:#00ff88;box-shadow:0 0 14px #00ff88"></div><h1>JARVIS 3D • AI BRAIN • CHATGPT MODE</h1><span class="tag" id="memTag">MEM 0</span><span class="tag" style="border-color:#00ff88;color:#00ff88">BRAIN: ONLINE</span></div><div style="display:flex;gap:10px"><div class="icon-btn" onclick="JARVIS.voice()">🎤</div><div class="icon-btn" onclick="JARVIS.wakeToggle()"><span id="wakeIcon">👂</span></div><div class="icon-btn" onclick="toggleDrawer()">⚙</div></div></div>
+<div class="center">
+<div class="hud-ring"><div style="font-family:'Orbitron';font-size:8px;letter-spacing:3px;color:#00e5ff;text-shadow:0 0 15px #00e5ff">VOLUMETRIC • AI • MARK-53</div></div>
+<div class="chat-wrap">
+<div class="chat-header"><span>💬 JARVIS AI CHAT — Ask anything like ChatGPT</span><span style="cursor:pointer" onclick="clearChat()">🗑️ CLEAR</span></div>
+<div class="chat-body" id="chatBody">
+<div class="msg jarvis">Hello, I am JARVIS Mark-53. I am now your ChatGPT + 3D Hologram + Auto WhatsApp.<br><br>Try:<br>• <b>message mummy hii</b> → auto WhatsApp<br>• <b>call mummy</b> → auto call<br>• <b>explain black holes</b> → AI answer<br>• <b>write python code for sorting</b><br>• <b>who is Tony Stark?</b></div>
+</div>
+</div>
+<div class="input-wrap"><input id="cmd" placeholder="Ask anything or say message mummy hii — AI + Auto"><button onclick="JARVIS.sendCmd()">ASK</button><button onclick="JARVIS.voice()">🎤</button></div>
+<div id="status" style="margin-top:12px;font-size:11px;text-shadow:0 0 12px #00e5ff">● 3D + AI Brain + Auto Contacts — Ready</div>
+</div>
+<div class="bottom"><div class="log-panel" id="log"></div><div class="content-preview" id="content">AI Brain: Pollinations + Gemini fallback<br>Ask any doubt — Jarvis answers<br>Auto contacts still work</div></div>
 </div>
 </div>
 <div id="overlay" onclick="toggleDrawer()"></div>
 <div id="drawer">
-<div class="drawer-header"><b style="font-family:'Orbitron';font-size:11px;letter-spacing:3px">SETTINGS • 3D AUTO • MARK-53</b><div class="icon-btn" onclick="toggleDrawer()">✕</div></div>
-<div class="tab-row"><div class="tab active" onclick="openTab('tools')">TOOLS</div><div class="tab" onclick="openTab('contacts')">CONTACTS</div><div class="tab" onclick="openTab('system')">SYSTEM</div></div>
+<div class="drawer-header"><b style="font-family:'Orbitron';font-size:11px;letter-spacing:3px">AI SETTINGS • MARK-53</b><div class="icon-btn" onclick="toggleDrawer()">✕</div></div>
+<div class="tab-row"><div class="tab active" onclick="openTab('tools')">TOOLS</div><div class="tab" onclick="openTab('contacts')">CONTACTS</div><div class="tab" onclick="openTab('ai')">AI BRAIN</div></div>
 <div class="drawer-content">
 <div id="tab-tools">
-<input id="contactName" class="small" placeholder="Contact name: mummy / mom"><input id="msgText" class="small" placeholder="Message: hii"><div class="grid2"><button class="btn btn-green" onclick="JARVIS.saveContact()">💾 Save Mummy</button><button class="btn btn-green" onclick="JARVIS.msg('whatsapp')">💬 Auto WhatsApp</button><button class="btn btn-green" onclick="JARVIS.msg('call')">📞 Auto Call</button><button class="btn btn-green" onclick="JARVIS.pick()">👥 Pick Phone</button></div>
-<div style="margin-top:14px;font-size:9px;opacity:0.6;letter-spacing:1px">FIRST TIME SETUP: Pick Mummy → Save → Then voice auto forever — Like LIV memory_manager.py — No limit</div>
-<div class="grid2" style="margin-top:14px"><button class="btn btn-green" onclick="JARVIS.open('youtube')">YouTube</button><button class="btn btn-green" onclick="JARVIS.open('whatsapp')">WhatsApp Web</button><button class="btn btn-green" onclick="JARVIS.open('gmail')">Gmail</button><button class="btn btn-green" onclick="JARVIS.open('maps')">Maps</button><button class="btn" onclick="JARVIS.search('news')">📰 News</button><button class="btn" onclick="JARVIS.action('weather')">🌤️ Weather Allahabad</button><button class="btn" onclick="JARVIS.brief()">🌅 Briefing</button><button class="btn" onclick="JARVIS.search('research')">🔬 Research</button></div>
+<input id="contactName" class="small" placeholder="Name: mummy"><input id="msgText" class="small" placeholder="Message: hii"><div class="grid2"><button class="btn btn-green" onclick="JARVIS.saveContact()">💾 Save Mummy</button><button class="btn btn-green" onclick="JARVIS.msg('whatsapp')">💬 Auto WhatsApp</button><button class="btn btn-green" onclick="JARVIS.msg('call')">📞 Auto Call</button><button class="btn btn-green" onclick="JARVIS.pick()">👥 Pick</button></div>
+<div class="grid2" style="margin-top:12px"><button class="btn btn-green" onclick="JARVIS.open('youtube')">YouTube</button><button class="btn btn-green" onclick="JARVIS.open('whatsapp')">WhatsApp</button><button class="btn" onclick="JARVIS.brief()">🌅 Briefing</button><button class="btn" onclick="JARVIS.search('news')">News</button></div>
 </div>
-<div id="tab-contacts" style="display:none"><div style="font-size:10px;letter-spacing:1px;color:#00e5ff">SAVED CONTACTS — AUTO MEMORY — LIV STYLE</div><div id="contactsList" style="font-size:10px;background:rgba(0,0,0,0.35);padding:12px;border-radius:12px;margin-top:10px;min-height:140px;border:1px solid rgba(0,229,255,0.15)"></div><div class="grid2" style="margin-top:10px"><button class="btn" onclick="JARVIS.showContacts()">👁️ Refresh List</button><button class="btn" onclick="JARVIS.clearContacts()">🗑️ Clear All</button></div></div>
-<div id="tab-system" style="display:none"><div style="font-size:10px;line-height:2;background:rgba(0,0,0,0.35);padding:12px;border-radius:12px;border:1px solid rgba(0,229,255,0.15)"><div id="sBat">Battery: --</div><div id="sTime">Time: --</div><div>3D: Three.js 0.160.0 • WebGL • Particles 800</div><div>Auto: Contacts saved in localStorage</div></div><div style="margin-top:12px"><button class="btn" onclick="toggle3DMode()">🎮 Toggle 3D: Close / Far</button><button class="btn" onclick="location.reload()">🔄 Reload HUD</button></div></div>
+<div id="tab-contacts" style="display:none"><div id="contactsList" style="font-size:10px;background:rgba(0,0,0,0.35);padding:12px;border-radius:12px;min-height:120px;border:1px solid rgba(0,229,255,0.15)"></div><div class="grid2" style="margin-top:8px"><button class="btn" onclick="JARVIS.showContacts()">Refresh</button><button class="btn" onclick="JARVIS.clearContacts()">Clear</button></div></div>
+<div id="tab-ai" style="display:none">
+<div style="font-size:10px;line-height:1.8;background:rgba(0,0,0,0.35);padding:12px;border-radius:12px;border:1px solid rgba(0,255,136,0.2)">
+<b style="color:#00ff88">AI BRAIN CONFIG</b><br><br>
+• Default: Free AI (no key) — Pollinations<br>
+• Optional: Add Gemini API for faster<br><br>
+<input id="geminiKey" class="small" placeholder="Paste Gemini API Key (optional) — sk-..."><button class="btn btn-green" onclick="saveGeminiKey()">💾 Save Gemini Key</button>
+<div style="margin-top:8px;font-size:9px;opacity:0.7">Get free key: aistudio.google.com/apikey — Saves in browser only — Never sent to me</div>
+<br><button class="btn" onclick="JARVIS.speakLast()">🔊 Speak Last Answer</button>
+<button class="btn" onclick="clearChat()">🗑️ Clear Chat History</button>
+</div>
+<div style="margin-top:10px;font-size:9px;opacity:0.6">AI remembers chat like LIV — Stores in localStorage — No limit</div>
+</div>
 </div>
 </div>
 
@@ -71,125 +94,130 @@ let scene,camera,renderer,reactorCore,ring1,ring2,ring3,particleSystem;
 let mouseX=0,mouseY=0;
 function init3D(){
  const canvas=document.getElementById('three-canvas');
- scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(0x02040a,0.028);
- camera=new THREE.PerspectiveCamera(58, innerWidth/innerHeight, 0.1, 1000); camera.position.set(0,0,8.2);
+ scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(0x02040a,0.03);
+ camera=new THREE.PerspectiveCamera(58,innerWidth/innerHeight,0.1,1000); camera.position.set(0,0,8);
  renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true}); renderer.setSize(innerWidth,innerHeight); renderer.setPixelRatio(devicePixelRatio);
  scene.add(new THREE.AmbientLight(0x001122,0.9));
  const p1=new THREE.PointLight(0x00e5ff,2.5,24); p1.position.set(0,0,4); scene.add(p1);
- const p2=new THREE.PointLight(0x00ff88,1.2,18); p2.position.set(4,3,3); scene.add(p2);
- const p3=new THREE.PointLight(0x8855ff,0.8,15); p3.position.set(-3,-2,2); scene.add(p3);
-
- const coreGeo=new THREE.SphereGeometry(1,64,64);
- const coreMat=new THREE.MeshPhysicalMaterial({color:0x00e5ff,emissive:0x00aaff,emissiveIntensity:0.85,metalness:0.08,roughness:0.12,transmission:0.65,thickness:0.6,clearcoat:1,clearcoatRoughness:0.08});
+ const coreGeo=new THREE.SphereGeometry(0.9,64,64);
+ const coreMat=new THREE.MeshPhysicalMaterial({color:0x00e5ff,emissive:0x00aaff,emissiveIntensity:0.85,metalness:0.08,roughness:0.12,transmission:0.65,thickness:0.6,clearcoat:1});
  reactorCore=new THREE.Mesh(coreGeo,coreMat); scene.add(reactorCore);
- const innerGeo=new THREE.SphereGeometry(0.38,32,32);
- const innerMat=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.92});
- const inner=new THREE.Mesh(innerGeo,innerMat); reactorCore.add(inner);
-
- const r1Geo=new THREE.TorusGeometry(1.75,0.022,16,120);
- const r1Mat=new THREE.MeshBasicMaterial({color:0x00e5ff,transparent:true,opacity:0.85});
- ring1=new THREE.Mesh(r1Geo,r1Mat); ring1.rotation.x=Math.PI/2; scene.add(ring1);
- const r2Geo=new THREE.TorusGeometry(2.45,0.016,16,120);
- const r2Mat=new THREE.MeshBasicMaterial({color:0x00ffaa,transparent:true,opacity:0.55});
- ring2=new THREE.Mesh(r2Geo,r2Mat); ring2.rotation.x=Math.PI/2.2; ring2.rotation.y=0.35; scene.add(ring2);
- const r3Geo=new THREE.TorusGeometry(3.15,0.011,16,120);
- const r3Mat=new THREE.MeshBasicMaterial({color:0x88bbff,transparent:true,opacity:0.32});
- ring3=new THREE.Mesh(r3Geo,r3Mat); ring3.rotation.x=Math.PI/1.9; scene.add(ring3);
- const dGeo=new THREE.TorusGeometry(1.32,0.009,8,80);
- const dMat=new THREE.MeshBasicMaterial({color:0x00e5ff,transparent:true,opacity:0.45});
- const dashed=new THREE.Mesh(dGeo,dMat); dashed.rotation.x=Math.PI/2; scene.add(dashed);
-
- const pCount=800;
- const pGeo=new THREE.BufferGeometry();
- const pPos=new Float32Array(pCount*3);
- for(let i=0;i<pCount;i++){ pPos[i*3]=(Math.random()-0.5)*26; pPos[i*3+1]=(Math.random()-0.5)*26; pPos[i*3+2]=(Math.random()-0.5)*26; }
- pGeo.setAttribute('position',new THREE.BufferAttribute(pPos,3));
- const pMat=new THREE.PointsMaterial({color:0x00e5ff,size:0.035,transparent:true,opacity:0.65,sizeAttenuation:true});
- particleSystem=new THREE.Points(pGeo,pMat); scene.add(particleSystem);
-
- const gridGeo=new THREE.PlaneGeometry(40,40,24,24);
- const gridMat=new THREE.MeshBasicMaterial({color:0x00e5ff,wireframe:true,transparent:true,opacity:0.09});
- const grid=new THREE.Mesh(gridGeo,gridMat); grid.rotation.x=-Math.PI/2; grid.position.y=-4.5; scene.add(grid);
-
- addEventListener('mousemove',e=>{ mouseX=(e.clientX/innerWidth-0.5)*0.6; mouseY=(e.clientY/innerHeight-0.5)*0.6; });
+ const inner=new THREE.Mesh(new THREE.SphereGeometry(0.35,32,32),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.9})); reactorCore.add(inner);
+ ring1=new THREE.Mesh(new THREE.TorusGeometry(1.7,0.022,16,120),new THREE.MeshBasicMaterial({color:0x00e5ff,transparent:true,opacity:0.8})); ring1.rotation.x=Math.PI/2; scene.add(ring1);
+ ring2=new THREE.Mesh(new THREE.TorusGeometry(2.3,0.015,16,120),new THREE.MeshBasicMaterial({color:0x00ffaa,transparent:true,opacity:0.5})); ring2.rotation.x=Math.PI/2.2; scene.add(ring2);
+ ring3=new THREE.Mesh(new THREE.TorusGeometry(3,0.01,16,120),new THREE.MeshBasicMaterial({color:0x88bbff,transparent:true,opacity:0.3})); ring3.rotation.x=Math.PI/1.9; scene.add(ring3);
+ const pGeo=new THREE.BufferGeometry(); const pPos=new Float32Array(800*3); for(let i=0;i<800;i++){ pPos[i*3]=(Math.random()-0.5)*24; pPos[i*3+1]=(Math.random()-0.5)*24; pPos[i*3+2]=(Math.random()-0.5)*24; } pGeo.setAttribute('position',new THREE.BufferAttribute(pPos,3));
+ particleSystem=new THREE.Points(pGeo,new THREE.PointsMaterial({color:0x00e5ff,size:0.03,transparent:true,opacity:0.6})); scene.add(particleSystem);
+ const grid=new THREE.Mesh(new THREE.PlaneGeometry(40,40,20,20),new THREE.MeshBasicMaterial({color:0x00e5ff,wireframe:true,transparent:true,opacity:0.08})); grid.rotation.x=-Math.PI/2; grid.position.y=-4; scene.add(grid);
+ addEventListener('mousemove',e=>{ mouseX=(e.clientX/innerWidth-0.5)*0.5; mouseY=(e.clientY/innerHeight-0.5)*0.5; });
  addEventListener('resize',()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); });
  animate();
 }
 let pulseS=0;
-function animate(){
- requestAnimationFrame(animate);
- if(window.waveActive) pulseS=Math.min(1,pulseS+0.09); else pulseS=Math.max(0,pulseS-0.025);
- reactorCore.scale.setScalar(1+pulseS*0.28);
- reactorCore.material.emissiveIntensity=0.85+pulseS*1.6;
- reactorCore.rotation.y+=0.006; reactorCore.rotation.x=Math.sin(Date.now()*0.0006)*0.12;
- ring1.rotation.z+=0.009+pulseS*0.022; ring2.rotation.z-=0.006+pulseS*0.018; ring3.rotation.z+=0.004;
- camera.position.x+=(mouseX*2.2-camera.position.x)*0.025; camera.position.y+=(-mouseY*1.6-camera.position.y)*0.025; camera.lookAt(0,0,0);
- particleSystem.rotation.y+=0.0006; particleSystem.rotation.x+=0.00025;
- renderer.render(scene,camera);
-}
-window.toggle3DMode=()=>{ if(camera.position.z>5) camera.position.set(0,0,4.2); else camera.position.set(0,0,8.2); };
-window.waveActive=false; window.pulse=()=>{ window.waveActive=true; setTimeout(()=>window.waveActive=false,1300); };
+function animate(){ requestAnimationFrame(animate); if(window.waveActive) pulseS=Math.min(1,pulseS+0.09); else pulseS=Math.max(0,pulseS-0.025); reactorCore.scale.setScalar(1+pulseS*0.28); reactorCore.material.emissiveIntensity=0.85+pulseS*1.6; reactorCore.rotation.y+=0.006; ring1.rotation.z+=0.008+pulseS*0.02; ring2.rotation.z-=0.005; ring3.rotation.z+=0.003; camera.position.x+=(mouseX*2-camera.position.x)*0.02; camera.position.y+=(-mouseY*1.5-camera.position.y)*0.02; camera.lookAt(0,0,0); particleSystem.rotation.y+=0.0005; renderer.render(scene,camera); }
+window.waveActive=false; window.pulse=()=>{ window.waveActive=true; setTimeout(()=>window.waveActive=false,1200); };
 init3D();
 </script>
 
 <script>
+let lastAIAnswer="";
+function saveGeminiKey(){ let k=document.getElementById('geminiKey').value.trim(); if(k){ localStorage.setItem('jarvis-gemini-key',k); alert('✅ Gemini Key saved — Now faster like ChatGPT'); } }
+function clearChat(){ document.getElementById('chatBody').innerHTML='<div class="msg jarvis">Chat cleared. I am JARVIS Mark-53 — Ask anything.</div>'; localStorage.removeItem('jarvis-chat'); }
+
+async function askAI(prompt){
+ const chatBody=document.getElementById('chatBody');
+ chatBody.innerHTML+=`<div class="msg user">${prompt}</div>`;
+ chatBody.innerHTML+=`<div class="msg jarvis" id="typing"><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div> JARVIS thinking...</div>`;
+ chatBody.scrollTop=chatBody.scrollHeight;
+ window.pulse(); window.waveActive=true;
+
+ let answer="";
+ const geminiKey=localStorage.getItem('jarvis-gemini-key');
+
+ try{
+  // TRY 1: Gemini if key exists — Best quality like ChatGPT
+  if(geminiKey){
+   const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({contents:[{parts:[{text:`You are JARVIS Mark-53, Tony Stark's AI. Answer like JARVIS — helpful, witty, concise. User: ${prompt}` }]}]})
+   });
+   const data=await res.json();
+   answer=data.candidates?.[0]?.content?.parts?.[0]?.text||"";
+  }
+  // TRY 2: Free Pollinations AI — No key needed — Works forever
+  if(!answer){
+   const pollRes=await fetch(`https://text.pollinations.ai/${encodeURIComponent(`You are JARVIS Mark-53. Answer like JARVIS, helpful, concise, a bit witty. User asks: ${prompt}`)}`);
+   answer=await pollRes.text();
+  }
+ }catch(e){
+  answer="⚠️ AI offline — Check internet — But auto WhatsApp/call still works. Try again.";
+ }
+
+ document.getElementById('typing')?.remove();
+ answer=answer.slice(0,3000);
+ lastAIAnswer=answer;
+ chatBody.innerHTML+=`<div class="msg jarvis"><b>JARVIS:</b> ${answer.replace(/\n/g,'<br>')}</div>`;
+ chatBody.scrollTop=chatBody.scrollHeight;
+
+ // Save chat like LIV memory_manager
+ let history=JSON.parse(localStorage.getItem('jarvis-chat')||'[]');
+ history.push({q:prompt,a:answer,time:new Date().toISOString()});
+ localStorage.setItem('jarvis-chat',JSON.stringify(history.slice(-50)));
+
+ // Speak answer
+ try{ let u=new SpeechSynthesisUtterance(answer.slice(0,200)); u.rate=1; u.pitch=1.1; speechSynthesis.speak(u); }catch{}
+ window.waveActive=false;
+ document.getElementById('content').innerHTML=`<b>Last AI Answer</b><br>${answer.slice(0,400)}<br><br><button onclick="JARVIS.speakLast()" style="padding:6px 10px;border:1px solid #00e5ff;background:rgba(0,229,255,0.1);color:#00e5ff;border-radius:8px">🔊 Speak</button>`;
+
+ // Log like BEAST
+ JARVIS.log('ai_answer',{query:prompt,answer:answer.slice(0,100)});
+}
+
 const JARVIS={
- map:{youtube:"https://youtube.com",whatsapp:"https://web.whatsapp.com",instagram:"https://instagram.com",gmail:"https://mail.google.com",maps:"https://google.com/maps",spotify:"https://open.spotify.com",netflix:"https://netflix.com",facebook:"https://facebook.com"},
+ map:{youtube:"https://youtube.com",whatsapp:"https://web.whatsapp.com",gmail:"https://mail.google.com",maps:"https://google.com/maps"},
  contacts:JSON.parse(localStorage.getItem('jarvis-contacts')||'{}'),
- log(t,p){ let el=document.getElementById('log'); let time=new Date().toLocaleTimeString(); el.innerHTML=`<span style="color:#00ff88">${time}</span> <span style="color:#00e5ff">${t}</span> <span style="opacity:0.6">${JSON.stringify(p).slice(0,100)}</span><br>`+el.innerHTML; let m=JSON.parse(localStorage.getItem('jarvis-mark53')||'[]'); m.push({t,p,time}); localStorage.setItem('jarvis-mark53',JSON.stringify(m.slice(-150))); document.getElementById('memTag').innerText='MEM '+Object.keys(this.contacts).length; this.showContacts(); },
+ log(t,p){ let el=document.getElementById('log'); let time=new Date().toLocaleTimeString(); el.innerHTML=`<span style="color:#00ff88">${time}</span> <span style="color:#00e5ff">${t}</span> <span style="opacity:0.6">${JSON.stringify(p).slice(0,90)}</span><br>`+el.innerHTML; document.getElementById('memTag').innerText='MEM '+Object.keys(this.contacts).length; this.showContacts(); },
  open(n){ if(!n)return; n=n.toLowerCase().trim(); this.log('open_app',{app:n}); let e=this.map[n]; if(e) window.open(e,'_blank'); else window.open(`https://www.google.com/search?q=${encodeURIComponent(n)}`,'_blank'); window.pulse(); },
- saveContact(){ let name=document.getElementById('contactName').value.trim().toLowerCase()||'mummy'; let num=prompt(`Enter number for ${name} (10 digit):`); if(!num)return; num=num.replace(/\D/g,''); if(num.length===10) num='91'+num; this.contacts[name]=num; localStorage.setItem('jarvis-contacts',JSON.stringify(this.contacts)); this.log('save_contact',{name,num}); document.getElementById('status').innerText=`✅ Saved ${name} → ${num} — Now auto 3D`; this.showContacts(); },
- showContacts(){ let el=document.getElementById('contactsList'); if(!el)return; let c=this.contacts; if(Object.keys(c).length===0) el.innerHTML='No contacts — Click 👥 Pick Mummy → Auto saves → Then "message mummy hii" auto works'; else el.innerHTML=Object.entries(c).map(([k,v])=>`👤 <b>${k}</b> → ${v} <button onclick="JARVIS.testMsg('${k}')" style="margin-left:8px;font-size:9px;padding:3px 8px;border:1px solid #00e5ff;background:rgba(0,229,255,0.12);color:#00e5ff;border-radius:8px;cursor:pointer">Test Auto</button>`).join('<br><br>'); document.getElementById('memTag').innerText='MEM '+Object.keys(c).length; },
- clearContacts(){ if(confirm('Clear all contacts?')){ this.contacts={}; localStorage.removeItem('jarvis-contacts'); this.showContacts(); } },
+ saveContact(){ let name=(document.getElementById('contactName').value.trim().toLowerCase()||'mummy'); let num=prompt(`Enter number for ${name}:`); if(!num)return; num=num.replace(/\D/g,''); if(num.length===10) num='91'+num; this.contacts[name]=num; localStorage.setItem('jarvis-contacts',JSON.stringify(this.contacts)); this.log('save_contact',{name,num}); document.getElementById('status').innerText=`✅ Saved ${name} → auto`; this.showContacts(); },
+ showContacts(){ let el=document.getElementById('contactsList'); if(!el)return; let c=this.contacts; if(Object.keys(c).length===0) el.innerHTML='No contacts — Pick Mummy → Auto'; else el.innerHTML=Object.entries(c).map(([k,v])=>`👤 <b>${k}</b> → ${v} <button onclick="JARVIS.testMsg('${k}')" style="margin-left:6px;font-size:9px;padding:3px 8px;border:1px solid #00e5ff;background:rgba(0,229,255,0.1);color:#00e5ff;border-radius:8px">Test</button>`).join('<br><br>'); },
+ clearContacts(){ if(confirm('Clear?')){ this.contacts={}; localStorage.removeItem('jarvis-contacts'); this.showContacts(); } },
  testMsg(name){ document.getElementById('contactName').value=name; document.getElementById('msgText').value='hii'; this.msg('whatsapp'); },
- async pick(){
-  try{
-   if(!(navigator.contacts&&navigator.contacts.select)){
-    let num=prompt('Enter Mummy number (10 digit):'); if(num){ let name=document.getElementById('contactName').value.trim().toLowerCase()||'mummy'; num=num.replace(/\D/g,''); if(num.length===10) num='91'+num; this.contacts[name]=num; localStorage.setItem('jarvis-contacts',JSON.stringify(this.contacts)); this.log('save_contact',{name,num}); document.getElementById('status').innerText=`✅ Saved ${name} — 3D auto`; this.showContacts(); } return null;
-   }
-   const c=await navigator.contacts.select(['name','tel'],{multiple:false});
-   if(c[0]){ let tel=c[0].tel[0].replace(/\D/g,''); if(tel.length===10) tel='91'+tel; let name=document.getElementById('contactName').value.trim().toLowerCase()||c[0].name[0].toLowerCase().split(' ')[0]||'mummy'; this.contacts[name]=tel; localStorage.setItem('jarvis-contacts',JSON.stringify(this.contacts)); document.getElementById('contactName').value=name; document.getElementById('status').innerText=`✅ Picked & Saved: ${c[0].name[0]} → ${name} → ${tel} — Auto 3D`; this.log('save_contact',{name,tel}); this.showContacts(); }
-  }catch(e){} return null;
- },
- msg(type){
-  let input=document.getElementById('contactName').value.trim().toLowerCase(); let msg=document.getElementById('msgText').value||'hii'; let num=null;
-  if(this.contacts[input]) num=this.contacts[input];
-  else if(this.contacts['mummy'] && (input==='mummy'||input==='mom'||input==='mum')){ num=this.contacts['mummy']; input='mummy'; }
-  else { let raw=document.getElementById('contactName').value.replace(/\D/g,''); if(raw.length>=10) num=raw.length===10?'91'+raw:raw; }
-  if(!num){ document.getElementById('status').innerText=`❌ No number for "${input}" — Click ⚙ → 👥 Pick Mummy first`; setTimeout(()=>{ if(confirm(`Save number for "${input}"?`)) this.pick(); },350); return; }
-  if(type==='whatsapp'){ let url=`https://wa.me/${num}?text=${encodeURIComponent(msg)}`; this.log('auto_whatsapp',{to:input,number:num,message:msg}); document.getElementById('status').innerText=`🚀 3D Auto WhatsApp to ${input} (${num}) → ${msg}`; document.getElementById('content').innerHTML=`<b style="color:#00ff88">AUTO WHATSAPP — 3D</b><br>To: ${input}<br>Num: ${num}<br>Msg: ${msg}<br>Time: ${new Date().toLocaleTimeString()}<br><br>Opening WhatsApp auto...`; window.open(url,'_blank'); window.pulse(); }
-  else if(type==='call'){ this.log('auto_call',{to:input,number:num}); document.getElementById('status').innerText=`📞 Auto calling ${input}...`; window.location.href=`tel:${num}`; }
- },
- search(m){ let q=document.getElementById('cmd').value||prompt(m+' query:'); if(!q)return; this.log('web_search',{mode:m,query:q}); window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`,'_blank'); },
- action(a){ if(a==='weather'){ window.open('https://www.google.com/search?q=weather+Allahabad','_blank'); } },
- brief(){ let now=new Date(); this.log('morning_briefing',{time:now.toISOString()}); document.getElementById('status').innerText=`🌅 3D Briefing • ${now.toLocaleString()} • Contacts: ${Object.keys(this.contacts).length} • Auto ON`; document.getElementById('content').innerHTML=`🌅 <b>Morning Briefing</b><br>${now.toLocaleString()}<br>Allahabad<br>Contacts: ${Object.keys(this.contacts).join(', ')||'none — save mummy'}<br>3D HUD: Active`; },
- voice(){ let Rec=window.SpeechRecognition||window.webkitSpeechRecognition; if(!Rec)return alert('Use Chrome'); let rec=new Rec(); rec.lang='en-IN'; rec.start(); document.getElementById('status').innerText='🎤 Listening 3D... Say message mummy hii'; window.waveActive=true; rec.onresult=e=>{ let cmd=e.results[0][0].transcript; document.getElementById('cmd').value=cmd; handle(cmd); window.pulse(); }; rec.onend=()=>window.waveActive=false; },
- wakeToggle(){ wakeOn=!wakeOn; document.getElementById('wakeIcon').innerText=wakeOn?'🟢':'👂'; document.getElementById('status').innerText=wakeOn?'👂 Wake ON — Say Hey Jarvis — 3D':'Wake OFF'; if(wakeOn){ let Rec=window.SpeechRecognition||window.webkitSpeechRecognition; if(!Rec)return; wakeRec=new Rec(); wakeRec.continuous=true; wakeRec.lang='en-IN'; wakeRec.start(); wakeRec.onresult=e=>{ let t=e.results[e.results.length-1][0].transcript.toLowerCase(); if(t.includes('jarvis')){ handle(t.replace(/hey jarvis|jarvis/g,'').trim()); window.pulse(); } }; } else wakeRec?.stop(); },
+ async pick(){ try{ if(!(navigator.contacts&&navigator.contacts.select)){ let num=prompt('Enter Mummy number:'); if(num){ let name=document.getElementById('contactName').value.trim().toLowerCase()||'mummy'; num=num.replace(/\D/g,''); if(num.length===10) num='91'+num; this.contacts[name]=num; localStorage.setItem('jarvis-contacts',JSON.stringify(this.contacts)); this.log('save_contact',{name,num}); this.showContacts(); } return; } const c=await navigator.contacts.select(['name','tel'],{multiple:false}); if(c[0]){ let tel=c[0].tel[0].replace(/\D/g,''); if(tel.length===10) tel='91'+tel; let name=document.getElementById('contactName').value.trim().toLowerCase()||c[0].name[0].toLowerCase().split(' ')[0]||'mummy'; this.contacts[name]=tel; localStorage.setItem('jarvis-contacts',JSON.stringify(this.contacts)); this.log('save_contact',{name,tel}); this.showContacts(); } }catch{} },
+ msg(type){ let input=document.getElementById('contactName').value.trim().toLowerCase(); let msg=document.getElementById('msgText').value||'hii'; let num=this.contacts[input]||this.contacts['mummy']; if(!num){ let raw=document.getElementById('contactName').value.replace(/\D/g,''); if(raw.length>=10) num=raw.length===10?'91'+raw:raw; } if(!num){ document.getElementById('status').innerText=`❌ No number for ${input} — Save first`; return; } if(type==='whatsapp'){ let url=`https://wa.me/${num}?text=${encodeURIComponent(msg)}`; this.log('auto_whatsapp',{to:input,number:num}); document.getElementById('status').innerText=`🚀 Auto WhatsApp to ${input} → ${msg}`; window.open(url,'_blank'); window.pulse(); } else if(type==='call'){ window.location.href=`tel:${num}`; } },
+ search(m){ let q=document.getElementById('cmd').value||prompt(m+' query:'); if(!q)return; window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`,'_blank'); },
+ brief(){ let now=new Date(); this.log('briefing',{}); document.getElementById('status').innerText=`🌅 Briefing • ${now.toLocaleString()}`; askAI(`Give morning briefing for Allahabad, India. Time ${now.toLocaleString()}. Be JARVIS style.`); },
+ speakLast(){ if(lastAIAnswer){ let u=new SpeechSynthesisUtterance(lastAIAnswer.slice(0,300)); speechSynthesis.speak(u); } },
+ voice(){ let Rec=window.SpeechRecognition||window.webkitSpeechRecognition; if(!Rec)return alert('Use Chrome'); let rec=new Rec(); rec.lang='en-IN'; rec.start(); document.getElementById('status').innerText='🎤 Listening... Ask anything or message mummy hii'; window.waveActive=true; rec.onresult=e=>{ let cmd=e.results[0][0].transcript; document.getElementById('cmd').value=cmd; handle(cmd); }; rec.onend=()=>window.waveActive=false; },
+ wakeToggle(){ wakeOn=!wakeOn; document.getElementById('wakeIcon').innerText=wakeOn?'🟢':'👂'; if(wakeOn){ let Rec=window.SpeechRecognition||window.webkitSpeechRecognition; if(!Rec)return; wakeRec=new Rec(); wakeRec.continuous=true; wakeRec.lang='en-IN'; wakeRec.start(); wakeRec.onresult=e=>{ let t=e.results[e.results.length-1][0].transcript.toLowerCase(); if(t.includes('jarvis')) handle(t.replace(/hey jarvis|jarvis/g,'').trim()); }; } else wakeRec?.stop(); },
  sendCmd(){ handle(document.getElementById('cmd').value); }
 };
 let wakeOn=false,wakeRec=null;
 function handle(raw){
  if(!raw)return;
- let cmd=raw.toLowerCase().replace(/measage|mesage|messsage/g,'message').replace(/whatssapp|watsapp|watsap/g,'whatsapp').replace(/momy|mommy/g,'mummy').trim();
- document.getElementById('status').innerHTML=`● Heard: <b>${raw}</b> → Parsed: ${cmd}`;
- if(cmd.startsWith('message')||cmd.includes('whatsapp')){
-  let cleaned=cmd.replace(/^message\s*/,'').replace(/^whatsapp\s*/,'').replace(/\s*whatsapp\s*/,' ').trim();
-  let parts=cleaned.split(' ').filter(p=>p); let name=parts[0]||'mummy'; let msg=parts.slice(1).join(' ')||'hii'; msg=msg.replace('whatsapp','').trim()||'hii';
-  document.getElementById('contactName').value=name; document.getElementById('msgText').value=msg; JARVIS.msg('whatsapp');
- } else if(cmd.includes('call')){ let name=cmd.replace('call','').trim().split(' ')[0]||'mummy'; document.getElementById('contactName').value=name; JARVIS.msg('call'); }
- else if(cmd.includes('open')){ let app=cmd.replace('open','').trim().split(' ')[0]; JARVIS.open(app); }
- else if(cmd.includes('brief')) JARVIS.brief();
- else if(cmd.includes('search')||cmd.includes('news')) JARVIS.search(cmd.includes('news')?'news':'search');
- else { document.getElementById('content').innerHTML=`Heard: ${cmd}<br>Try: message mummy hii / call mummy / open youtube`; }
+ let cmd=raw.toLowerCase().trim();
+ document.getElementById('status').innerText=`● Heard: ${raw}`;
+ let isMsg=cmd.startsWith('message')||cmd.includes('whatsapp')||cmd.startsWith('call ');
+ let isOpen=cmd.startsWith('open ');
+ let isBrief=cmd.includes('briefing')||cmd.includes('brief');
+ let isQuestion=cmd.length>8 &&!isMsg &&!isOpen &&!isBrief;
+
+ if(isMsg){
+  if(cmd.includes('call')){ let name=cmd.replace('call','').trim().split(' ')[0]||'mummy'; document.getElementById('contactName').value=name; JARVIS.msg('call'); }
+  else { let cleaned=cmd.replace(/^message\s*/,'').replace(/\s*whatsapp\s*/,' ').trim(); let parts=cleaned.split(' ').filter(p=>p); let name=parts[0]||'mummy'; let msg=parts.slice(1).join(' ')||'hii'; document.getElementById('contactName').value=name; document.getElementById('msgText').value=msg; JARVIS.msg('whatsapp'); }
+ } else if(isOpen){ let app=cmd.replace('open','').trim().split(' ')[0]; JARVIS.open(app); }
+ else if(isBrief){ JARVIS.brief(); }
+ else if(isQuestion){ askAI(raw); } // ← CHATGPT MODE
+ else { askAI(raw); }
 }
 document.getElementById('cmd').addEventListener('keydown',e=>{if(e.key==='Enter') handle(e.target.value);});
 function toggleDrawer(){ document.getElementById('drawer').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); }
-function openTab(n){ document.querySelectorAll('[id^=tab-]').forEach(el=>el.style.display='none'); let el=document.getElementById('tab-'+n); if(el) el.style.display='block'; document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); event.target.classList.add('active'); }
+function openTab(n){ document.querySelectorAll('[id^=tab-]').forEach(el=>el.style.display='none'); document.getElementById('tab-'+n).style.display='block'; document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); event.target.classList.add('active'); }
 window.onload=()=>{
  JARVIS.showContacts();
- setInterval(()=>{ let el=document.getElementById('sTime'); if(el) el.innerText=`Time: ${new Date().toLocaleString()}`; let bat=document.getElementById('sBat'); if(navigator.getBattery) navigator.getBattery().then(b=>{ bat.innerText=`Battery: ${(b.level*100).toFixed(0)}%`; }); },1000);
- document.getElementById('log').innerHTML=`<span style="color:#00ff88">${new Date().toLocaleTimeString()}</span> <span style="color:#00e5ff">3D HOLOGRAM • MARK-53</span> Volumetric HUD ready — Depth + Particles + Auto — Say message mummy hii<br>`;
- if(!JARVIS.contacts['mummy']) document.getElementById('status').innerText='⚠️ FIRST TIME: Click ⚙ → 👥 Pick Mummy → Save → Then auto works forever — 3D';
+ let hist=JSON.parse(localStorage.getItem('jarvis-chat')||'[]');
+ if(hist.length>0){ let body=document.getElementById('chatBody'); hist.slice(-5).forEach(h=>{ body.innerHTML+=`<div class="msg user">${h.q}</div><div class="msg jarvis">${h.a.slice(0,400)}</div>`; }); }
+ let savedKey=localStorage.getItem('jarvis-gemini-key'); if(savedKey) document.getElementById('geminiKey').value=savedKey;
+ document.getElementById('log').innerHTML=`<span style="color:#00ff88">${new Date().toLocaleTimeString()}</span> <span style="color:#00e5ff">JARVIS 3D + AI BRAIN</span> ChatGPT mode online — Ask any doubt<br>`;
 };
 </script>
 </body>
