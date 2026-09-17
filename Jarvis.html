@@ -1,0 +1,291 @@
+(<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#020711">
+<title>JARVIS V53 FREE - VOICE ONLY - WHOLE DEVICE</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root{--cyan:#00eaff;--orange:#ff9d24;--green:#32ff9a;--line:rgba(0,234,255,.32)}
+*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#02050b;color:#dffaff;font-family:Consolas,monospace}
+body{background:radial-gradient(circle at 50% 45%,#0a2a3a 0,#02050b 60%,#000 100%)}
+.top{position:absolute;left:10px;right:10px;top:8px;height:44px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);background:rgba(0,10,17,.85);z-index:20;padding:0 12px;border-radius:12px}
+.logo{font-size:13px;letter-spacing:4px;font-weight:900;text-shadow:0 0 12px var(--cyan)}
+#scene{position:fixed;inset:0;z-index:1}
+#coreLabel{position:absolute;left:50%;top:50%;transform:translate(-50%,135px);text-align:center;z-index:5;pointer-events:none}
+#coreName{font-size:11px;letter-spacing:5px;color:var(--cyan);text-shadow:0 0 15px var(--cyan)}#coreState{font-size:8px;margin-top:5px;opacity:.7}
+.panel{position:absolute;width:255px;padding:9px;border:1px solid var(--line);background:linear-gradient(135deg,rgba(0,30,45,.82),rgba(1,7,14,.82));backdrop-filter:blur(10px);z-index:6;border-radius:12px}
+#blackbox{left:10px;top:62px}#devicePanel{right:10px;top:62px}#memoryPanel{left:10px;bottom:78px}#systemPanel{right:10px;bottom:78px}
+.panelTitle{font-size:8px;letter-spacing:2px;color:var(--cyan);margin-bottom:6px}
+.panelContent{font-size:8px;line-height:1.5;max-height:145px;overflow:auto}
+#chat{position:absolute;left:50%;top:60%;transform:translateX(-50%);width:min(700px,94%);max-height:175px;overflow:auto;z-index:7}
+.msg{margin:4px 0;padding:6px 9px;border-left:2px solid var(--cyan);background:rgba(0,20,30,.5);font-size:11px;white-space:pre-wrap}.msg.user{border-left-color:var(--orange)}
+#command{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:min(780px,96%);display:flex;gap:5px;z-index:20}
+#input{flex:1;height:44px;border:1px solid var(--line);background:rgba(0,10,18,.9);color:#fff;padding:0 14px;border-radius:22px;outline:none}
+button{height:44px;min-width:48px;border:1px solid var(--line);background:rgba(0,25,38,.9);color:var(--cyan);border-radius:22px;cursor:pointer;font-size:12px}
+button.active{background:rgba(0,200,255,.35);box-shadow:0 0 18px var(--cyan)}
+#voiceWave{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:110px;height:110px;border:2px solid var(--cyan);border-radius:50%;display:none;z-index:10;animation:pulse 1s infinite}
+@keyframes pulse{0%{transform:translate(-50%,-50%) scale(.8);opacity:1}100%{transform:translate(-50%,-50%) scale(1.7);opacity:0}}
+#arPanel{position:absolute;inset:0;z-index:40;display:none;background:rgba(0,10,18,.94);padding:12px;overflow:auto}
+.toast{position:absolute;top:58px;left:50%;transform:translateX(-50%);z-index:50;background:#00141f;border:1px solid var(--cyan);border-radius:20px;padding:6px 14px;font-size:9px;display:none}
+</style>
+</head>
+<body>
+<div id="scene"></div>
+<div class="top"><div class="logo">JARVIS V53 FREE 24/7</div><div style="font-size:8px"><span id="listenState">VOICE OFF</span> | <span id="contactCount">0 contacts</span> | <span id="net">ONLINE</span></div></div>
+<div class="panel" id="blackbox"><div class="panelTitle">NEURAL BRAIN // FREE WHOLE INTERNET</div><div class="panelContent">INPUT: <span id="bbInput">IDLE</span><br>INTENT: <span id="bbIntent">—</span><br>DEVICE: <span id="bbDevice">—</span><br>WAKE: <span id="bbWake">OFF</span><br><br>Voice: message mom hi, call dad, torch on/off, vibrate, open youtube, open maps, navigate to Delhi, search black hole, show chair, timer 5 sec, remember mom 9876543210</div></div>
+<div class="panel" id="devicePanel"><div class="panelTitle">DEVICE CONTROL // 100% FREE</div><div class="panelContent"><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px"><button onclick="JarvisFree.torch(true)">TORCH ON</button><button onclick="JarvisFree.torch(false)">TORCH OFF</button><button onclick="JarvisFree.vibrate()">VIBRATE</button><button onclick="JarvisFree.openApp('youtube')">YOUTUBE</button><button onclick="JarvisFree.openApp('maps')">MAPS</button><button onclick="loadContactsVoice()">CONTACTS AR</button></div><div style="margin-top:6px;opacity:.7">Free intents: tel:, sms:, wa.me, geo:, no paid app</div></div></div>
+<div class="panel" id="memoryPanel"><div class="panelTitle">MEMORY + TASKS</div><div class="panelContent"><div id="memPreview">No memory</div><div style="margin-top:6px;display:flex;gap:4px"><button onclick="showMem()">SHOW</button><button onclick="clearMem()">CLEAR</button></div></div></div>
+<div class="panel" id="systemPanel"><div class="panelTitle">SYSTEM // FREE</div><div class="panelContent"><div>BATTERY: <span id="bat">—</span></div><div>FPS: <span id="fps">—</span></div><div style="margin-top:6px">100% free: Web Contacts API + Speech API + Wake Lock + Notifications + Three.js holograms</div></div></div>
+<div id="coreLabel"><div id="coreName">NEURAL CORE FREE</div><div id="coreState">SAY "JARVIS" — VOICE ONLY — NO TAP NEEDED AFTER START</div></div>
+<div id="voiceWave"></div>
+<div id="chat"></div>
+<div id="command"><input id="input" placeholder='Say: Jarvis message mom I will be late, Jarvis call dad, Jarvis torch on, Jarvis open youtube'><button id="send">➤</button><button id="wakeBtn">👂 START VOICE 24/7 FREE</button></div>
+<div id="arPanel"><div style="display:flex;justify-content:space-between"><b style="color:var(--cyan);letter-spacing:3px">AR CONTACTS // LIVE - NO CODE SAVED</b><button onclick="document.getElementById('arPanel').style.display='none'">✕</button></div><input id="contactSearch" placeholder="Search Mom, Dad..." style="width:100%;height:42px;margin:10px 0;border:1px solid var(--line);background:#000a;color:#fff;padding:0 12px;border-radius:22px"><div id="contactList" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+let allContacts=[], isListening=false, recognition=null, torchTrack=null, memories=JSON.parse(localStorage.getItem("JARVIS_MEM")||"[]"), tasks=JSON.parse(localStorage.getItem("JARVIS_TASK")||"[]"), lastAns="";
+function save(){localStorage.setItem("JARVIS_MEM",JSON.stringify(memories.slice(-100)));localStorage.setItem("JARVIS_TASK",JSON.stringify(tasks.slice(-100)));updateMem();}
+function updateMem(){$("memPreview").textContent=(memories.slice(-3).join("\n")||"No memory")+"\n"+(tasks.slice(-2).map(t=>"[TASK] "+t.text).join("\n")||"");$("contactCount").textContent=allContacts.length+" contacts live";}
+function log(t,u=false){let e=document.createElement("div");e.className="msg"+(u?" user":"");e.textContent=(u?"YOU: ":"JARVIS: ")+t;$("chat").appendChild(e);while($("chat").children.length>28)$("chat").firstChild.remove();$("chat").scrollTop=1e9;lastAns=t;}
+function speak(t){if(!("speechSynthesis" in window))return;speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang="en-IN";u.rate=.96;speechSynthesis.speak(u);}
+function toast(m){let el=$("toast");el.textContent=m;el.style.display="block";setTimeout(()=>el.style.display="none",2500);}
+
+// THREE CORE - HOLOGRAMS FIXED
+let scene,camera,renderer,coreGroup,holoGroup;
+function initThree(){
+ scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,2000);camera.position.set(0,0,8);
+ renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setSize(innerWidth,innerHeight);$("scene").appendChild(renderer.domElement);
+ coreGroup=new THREE.Group();scene.add(coreGroup);
+ for(let i=0;i<9;i++){let geo=new THREE.TorusGeometry(1+i*.07,.007,6,96),mat=new THREE.MeshBasicMaterial({color:i%2?0x00eaff:0xff9d24,transparent:true,opacity:.4}),r=new THREE.Mesh(geo,mat);r.rotation.x=Math.random()*Math.PI;coreGroup.add(r);}
+ coreGroup.add(new THREE.Mesh(new THREE.IcosahedronGeometry(.7,3),new THREE.MeshBasicMaterial({color:0x00dfff,wireframe:true,transparent:true,opacity:.7})));
+ holoGroup=new THREE.Group();scene.add(holoGroup);
+ (function loop(){requestAnimationFrame(loop);coreGroup.rotation.y+=.0015;holoGroup.rotation.y+=.001;renderer.render(scene,camera);})();
+ window.addEventListener("resize",()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+}
+function clearHolo(){while(holoGroup.children.length)holoGroup.remove(holoGroup.children[0]);}
+function createHolo(name){
+ clearHolo();let q=name.toLowerCase().trim(),g=new THREE.Group(),M=c=>new THREE.MeshStandardMaterial({color:c}),W=c=>new THREE.MeshBasicMaterial({color:c,wireframe:true,transparent:true,opacity:.6});
+ if(/gun|weapon|pistol|rifle|bomb/.test(q)){log("Weapon hologram blocked for safety");return;}
+ if(q.includes("dna")){for(let i=0;i<70;i++){let t=i/69*Math.PI*6,y=(i/69-.5)*3.5,x=Math.cos(t)*.6,z=Math.sin(t)*.6;let a=new THREE.Mesh(new THREE.SphereGeometry(.04,8,8),new THREE.MeshBasicMaterial({color:0x00eaff}));a.position.set(x,y,z);let b=a.clone();b.position.set(-x,y,-z);g.add(a,b);}}
+ else if(q.includes("earth")||q.includes("planet")){g.add(new THREE.Mesh(new THREE.SphereGeometry(.75,32,32),M(0x2a7fff)));}
+ else if(q.includes("black hole")){g.add(new THREE.Mesh(new THREE.SphereGeometry(.55,32,32),new THREE.MeshBasicMaterial({color:0})));for(let i=0;i<5;i++){let r=new THREE.Mesh(new THREE.TorusGeometry(.85+i*.18,.03,8,100),new THREE.MeshBasicMaterial({color:i%2?0xff9d24:0x00eaff,transparent:true,opacity:.65}));r.rotation.x=1.2;g.add(r);}}
+ else if(q.includes("chair")){let s=new THREE.Mesh(new THREE.BoxGeometry(1.2,.1,1),M(0x7fc7d9)),b=new THREE.Mesh(new THREE.BoxGeometry(1.2,1,.1),M(0x7fc7d9));s.position.y=.2;b.position.set(0,.7,-.45);g.add(s,b);for(let x of[-.5,.5])for(let z of[-.4,.4]){let l=new THREE.Mesh(new THREE.BoxGeometry(.08,.6,.08),M(0x7fc7d9));l.position.set(x,-.2,z);g.add(l);}}
+ else if(q.includes("car")){g.add(new THREE.Mesh(new THREE.BoxGeometry(1.6,.4,.8),M(0xcc3344)));}
+ else if(q.includes("bottle")){g.add(new THREE.Mesh(new THREE.CylinderGeometry(.18,.18,.7,16),M(0x6dbbe0)));}
+ else{g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(.75,2),W(0x00eaff)));} // generic safe hologram
+ holoGroup.add(g);log("Hologram projected: "+name+" (drag to rotate)");toast("Hologram: "+name);
+}
+
+// 100% FREE DEVICE CONTROL
+window.JarvisFree = {
+  call(num){ window.location.href=`tel:${num.replace(/\s/g,'')}`; log(`Calling ${num}`); },
+  sms(num, text){ window.location.href=`sms:${num}?body=${encodeURIComponent(text)}`; log(`SMS to ${num}`); },
+  whatsapp(num, text){
+    let clean=num.replace(/\D/g,''); if(clean.length===10) clean='91'+clean;
+    window.open(`https://wa.me/${clean}?text=${encodeURIComponent(text)}`,'_blank'); log(`WhatsApp to ${num}: ${text}`);
+  },
+  openApp(app){
+    let q=$("input").value.replace(/open /gi,"").trim();
+    if(app.includes("youtube")) window.open(`https://m.youtube.com/results?search_query=${encodeURIComponent(q||"jarvis")}`,'_blank');
+    else if(app.includes("maps")||app.includes("navigate")) window.open(`https://www.google.com/maps/search/${encodeURIComponent(q||"Allahabad")}`,'_blank');
+    else if(app.includes("whatsapp")) window.open(`https://wa.me/?text=${encodeURIComponent(lastAns||"From JARVIS")}`,'_blank');
+    else window.open(`https://www.google.com/search?q=${encodeURIComponent(app)}`,'_blank');
+    log(`Opening ${app}`);
+  },
+  async torch(on){
+    try{
+      if(on){
+        let s=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}});
+        torchTrack=s.getVideoTracks()[0]; await torchTrack.applyConstraints({advanced:[{torch:true}]}); $("bbDevice").textContent="TORCH ON"; log("Torch ON");
+      }else{
+        if(torchTrack){ await torchTrack.applyConstraints({advanced:[{torch:false}]}); torchTrack.stop(); torchTrack=null; $("bbDevice").textContent="TORCH OFF"; log("Torch OFF"); }
+      }
+    }catch(e){log("Torch not supported: "+e.message);}
+  },
+  vibrate(){ if(navigator.vibrate){navigator.vibrate([200,100,200]); log("Vibrated");} else log("Vibrate not supported"); },
+  share(text){ if(navigator.share) navigator.share({title:"JARVIS", text:text}); else {navigator.clipboard.writeText(text); toast("Copied");} },
+  async pickContact(){
+    if('contacts' in navigator && 'ContactsManager' in window){
+      try{
+        let contacts=await navigator.contacts.select(['name','tel'], {multiple:false});
+        if(contacts.length>0) return {name:contacts[0].name[0], phone:contacts[0].tel[0]};
+      }catch(e){log("Picker cancelled");}
+    } else {
+      let name=prompt("Contact name?"); let phone=prompt("Phone number? (with 91)");
+      if(phone) return {name:name||"Unknown", phone:phone};
+    }
+    return null;
+  }
+};
+
+// REAL-TIME CONTACTS AR FREE
+async function loadContactsVoice(){
+  try{
+    if('contacts' in navigator && 'ContactsManager' in window){
+      let contacts=await navigator.contacts.select(['name','tel'], {multiple:true});
+      allContacts=contacts.map(c=>({name:c.name[0], phone:c.tel[0]}));
+      updateMem(); $("contactCount").textContent=allContacts.length+" contacts live";
+      renderContacts(allContacts); $("arPanel").style.display='block';
+      log(`Loaded ${allContacts.length} real contacts AR - now say "message Mom hi" fully voice`);
+      toast(`${allContacts.length} contacts loaded`);
+    } else {
+      log("Your Chrome needs HTTPS for Contacts API - host on GitHub Pages free, then it works. Using memory fallback.");
+      let mem=memories.filter(m=>/\d{10}/.test(m)).map(m=>({name:m, phone:m.match(/\d{10,}/)[0]}));
+      allContacts=mem; renderContacts(allContacts); $("arPanel").style.display='block';
+    }
+  }catch(e){log("Contacts error: "+e.message);}
+}
+function renderContacts(list){
+  let cont=$("contactList"); cont.innerHTML="";
+  list.forEach(c=>{
+    let div=document.createElement('div');
+    div.style.cssText="border:1px solid var(--line);background:linear-gradient(135deg,rgba(0,30,45,.9),rgba(0,10,20,.9));border-radius:14px;padding:10px";
+    div.innerHTML=`<b style="color:var(--cyan)">${c.name}</b><div style="font-size:10px;opacity:.8">${c.phone}</div><div style="display:flex;gap:4px;margin-top:6px"><button onclick="JarvisFree.call('${c.phone}')">CALL</button><button onclick="JarvisFree.whatsapp('${c.phone}', prompt('Message?'))">WA</button><button onclick="JarvisFree.sms('${c.phone}', prompt('SMS?'))">SMS</button></div>`;
+    cont.appendChild(div);
+  });
+}
+$("contactSearch").addEventListener('input', e=>{
+  let q=e.target.value.toLowerCase();
+  let f=allContacts.filter(c=>c.name.toLowerCase().includes(q)||c.phone.includes(q));
+  renderContacts(f);
+});
+function findContact(name){
+  name=name.toLowerCase().trim();
+  return allContacts.find(c=>c.name.toLowerCase().includes(name) || name.includes(c.name.toLowerCase().split(' ')[0]));
+}
+
+// FREE WHOLE INTERNET BRAIN
+async function askAstra(prompt){
+  try{
+    let wiki=""; try{let r=await fetch("https://en.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(prompt.split(' ').slice(0,3).join('_')));let j=await r.json();if(j.extract)wiki=j.extract.slice(0,300);}catch{}
+    let q=`You are JARVIS personal assistant 24/7, direct max 150 words. Context: ${wiki}. Q: ${prompt}`;
+    let res=await fetch("https://text.pollinations.ai/"+encodeURIComponent(q));
+    return (await res.text()).trim();
+  }catch{return "Astra busy offline. Try: 12*12, show chair, torch on, vibrate, open youtube";}
+}
+
+// VOICE ONLY HANDLER - NO TAP AFTER START
+async function handleVoice(raw){
+  let c=raw.toLowerCase().trim(); if(!c) return;
+  $("bbInput").textContent=c.slice(0,30);
+
+  // MATHS OFFLINE INSTANT
+  try{let e=c.replace(/^calculate\s+/,"").trim(); if(/^[0-9+\-*/%().\s^]+$/.test(e)){let r=Function('"use strict";return ('+e.replace(/\^/g,"**")+')')(); if(Number.isFinite(r)){log(`${e} = ${r} (offline)`); speak(String(r)); return;}}}catch{}
+
+  // DEVICE CONTROL FREE VOICE
+  if(c.includes("torch on")||c.includes("flashlight on")){JarvisFree.torch(true); return;}
+  if(c.includes("torch off")||c.includes("flashlight off")){JarvisFree.torch(false); return;}
+  if(c.includes("vibrate")){JarvisFree.vibrate(); return;}
+  if(c.includes("open youtube")||c.includes("youtube")){JarvisFree.openApp("youtube"); return;}
+  if(c.includes("open maps")||c.includes("navigate")||c.includes("maps")){let place=raw.replace(/.*navigate to|.*open maps|.*maps/gi,"").trim()||"Allahabad"; window.open(`https://www.google.com/maps/search/${encodeURIComponent(place)}`,'_blank'); log("Maps: "+place); return;}
+  if(c.includes("open whatsapp")){JarvisFree.openApp("whatsapp"); return;}
+  if(c.includes("share")){JarvisFree.share(lastAns); return;}
+
+  // MEMORY / TASKS / TIMER
+  if(c.startsWith("remember ")){let v=raw.replace(/^remember\s+/i,"").trim();memories.push(v);save();log("Stored: "+v); speak("Stored"); return;}
+  if(c.includes("show memory")||c==="memory"){log(memories.join("\n")||"Empty"); return;}
+  if(c.startsWith("add task")||c.startsWith("remind")||c.startsWith("task ")){let txt=raw.replace(/^(add task|remind me to|task|remind)\s+/i,"").trim();tasks.push({text:txt});save();log("Task: "+txt); return;}
+  if(/timer \d+/.test(c)){let m=c.match(/timer (\d+)\s*(s|sec|m|min)?/); if(m){let n=parseInt(m[1]),ms=m[2]&&m[2].startsWith("m")?n*60000:n*1000; log(`Timer ${n}${m[2]||"s"} set`); setTimeout(()=>{log(`Timer done: ${n}`); speak(`Timer done`); JarvisFree.vibrate(); if(Notification.permission==="granted") new Notification("JARVIS Timer",{body:`${n} timer done`});}, ms); return;}}
+
+  // CONTACTS VOICE - MESSAGE / CALL - REAL-TIME AR - NO CODE SAVED
+  if(c.includes("show contacts")||c.includes("contacts")||c.includes("ar contacts")){await loadContactsVoice(); return;}
+
+  if(c.startsWith("call ")){
+    let target=raw.replace(/call /i,"").trim();
+    let contact=findContact(target);
+    if(contact){JarvisFree.call(contact.phone); speak(`Calling ${contact.name}`);}
+    else{
+      let picked=await JarvisFree.pickContact();
+      if(picked){JarvisFree.call(picked.phone); allContacts.push(picked); updateMem();}
+    }
+    return;
+  }
+
+  if(c.startsWith("message ")||c.startsWith("whatsapp ")||c.startsWith("sms ")){
+    let m=raw.match(/^(?:message|whatsapp|sms)\s+(\w+)\s+(.+)/i);
+    let target=m?m[1]:raw.split(' ')[1];
+    let text=m?m[2]:raw.split(' ').slice(2).join(' ');
+    if(!text) text=prompt(`Message to ${target}?`)||"Hi from JARVIS";
+    let contact=findContact(target);
+    if(contact){
+      if(c.startsWith("whatsapp")) JarvisFree.whatsapp(contact.phone, text);
+      else if(c.startsWith("sms")) JarvisFree.sms(contact.phone, text);
+      else {
+        let useWA=confirm("OK=WhatsApp, Cancel=SMS");
+        if(useWA) JarvisFree.whatsapp(contact.phone, text); else JarvisFree.sms(contact.phone, text);
+      }
+      speak(`Messaging ${contact.name}`);
+    } else {
+      let picked=await JarvisFree.pickContact();
+      if(picked){
+        let useWA=c.startsWith("whatsapp")||confirm("WhatsApp? OK=WhatsApp");
+        if(useWA) JarvisFree.whatsapp(picked.phone, text); else JarvisFree.sms(picked.phone, text);
+        allContacts.push(picked); updateMem();
+      }
+    }
+    return;
+  }
+
+  // HOLOGRAMS - ANY SAFE OBJECT
+  if(c.startsWith("show ")||c.includes("hologram")||c.includes("dna")||c.includes("earth")||c.includes("chair")||c.includes("car")||c.includes("bottle")||c.includes("black hole")){
+    let q=c.replace(/show|hologram|display/g,"").trim()||"core";
+    if(/gun|weapon|pistol|rifle|bomb/.test(q)){log("Weapon blocked"); return;}
+    $("bbIntent").textContent="HOLOGRAM"; createHolo(q); return;
+  }
+
+  // WHOLE INTERNET SEARCH
+  if(c.startsWith("search ")||c.startsWith("what is")||c.startsWith("who is")||c.startsWith("tell me")||c.startsWith("explain")){
+    let ans=await askAstra(raw); log(ans); speak(ans.slice(0,200)); return;
+  }
+
+  // GENERAL
+  let ans=await askAstra(raw); log(ans); speak(ans.slice(0,200));
+}
+
+// 24/7 VOICE RECOGNITION FREE
+function startVoice247(){
+  let SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){log("Voice not supported - use Chrome Android"); return;}
+  recognition=new SR(); recognition.lang="en-IN"; recognition.continuous=true; recognition.interimResults=false;
+  recognition.onstart=()=>{isListening=true; $("listenState").textContent="LISTENING 24/7 - SAY JARVIS"; $("bbWake").textContent="LISTENING"; $("wakeBtn").classList.add("active"); $("voiceWave").style.display="block"; log("Voice 24/7 ON Sir - Say: Jarvis message Mom I will be late, Jarvis call Dad, Jarvis torch on"); if(Notification.requestPermission) Notification.requestPermission();};
+  recognition.onend=()=>{ $("voiceWave").style.display="none"; if(isListening){try{recognition.start();}catch{}} else {$("listenState").textContent="VOICE OFF"; $("bbWake").textContent="OFF"; $("wakeBtn").classList.remove("active");}};
+  recognition.onresult=async(e)=>{
+    let transcript=e.results[e.results.length-1][0].transcript.trim();
+    let low=transcript.toLowerCase();
+    if(low.includes("jarvis")){
+      let cmd=transcript.replace(/hey jarvis|jarvis/gi,"").trim();
+      if(!cmd){speak("Yes Sir?"); return;}
+      log(transcript, true); $("bbInput").textContent=transcript.slice(0,30);
+      await handleVoice(cmd);
+    } else {
+      // Direct command without wake word if already talking
+      if(transcript.length>3 && isListening){
+        log(transcript, true); await handleVoice(transcript);
+      }
+    }
+  };
+  try{recognition.start();}catch{}
+}
+function stopVoice(){isListening=false; try{recognition.stop();}catch{} $("listenState").textContent="VOICE OFF"; $("voiceWave").style.display="none"; $("wakeBtn").classList.remove("active"); log("Voice OFF");}
+
+$("wakeBtn").onclick=()=>{if(isListening) stopVoice(); else {loadContactsVoice(); startVoice247();}};
+$("send").onclick=()=>{let v=$("input").value.trim(); if(!v)return; $("input").value=""; log(v,true); handleVoice(v);};
+$("input").addEventListener("keydown", e=>{if(e.key==="Enter") $("send").click();});
+$("scene").addEventListener("pointerdown", e=>{let sx=e.clientX,sy=e.clientY; function move(ev){holoGroup.rotation.y+=(ev.clientX-sx)*0.01; holoGroup.rotation.x+=(ev.clientY-sy)*0.01; sx=ev.clientX; sy=ev.clientY;} function up(){window.removeEventListener("pointermove",move); window.removeEventListener("pointerup",up);} window.addEventListener("pointermove",move); window.addEventListener("pointerup",up);});
+$("scene").addEventListener("wheel", e=>{camera.position.z+=e.deltaY*0.003; camera.position.z=Math.max(2,Math.min(12,camera.position.z));});
+
+function showMem(){log("MEM:\n"+(memories.join("\n")||"empty")+"\nTASKS:\n"+(tasks.map(t=>t.text).join("\n")||"none"));}
+function clearMem(){memories=[];tasks=[];save();log("Cleared");}
+
+setInterval(()=>{$("net").textContent=navigator.onLine?"ONLINE":"OFFLINE"; if(navigator.getBattery){navigator.getBattery().then(b=>{$("bat").textContent=Math.round(b.level*100)+"%"+(b.charging?" ⚡":"");});}},2000);
+
+initThree();save();updateMem();
+log("JARVIS V53 FREE VOICE ONLY online Sir.\n\n100% FREE GUIDE:\n1. Host on GitHub Pages free for HTTPS\n2. Add to Home Screen = app icon\n3. Tap START VOICE 24/7 once\n4. Say: Jarvis message Mom I will be late, Jarvis call Dad, Jarvis torch on, Jarvis open YouTube, Jarvis search NASA, Jarvis show chair\n\nReal-time contacts AR - no numbers saved in code. Whole device + whole internet free.");
+</script>
+</body>
+</html>
