@@ -13,7 +13,7 @@
   --green:#51ffad;--text:#d9faff;--muted:#79a9b6;--shadow:0 0 24px rgba(0,217,255,.16);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-ht>ml,body{margin:0;width:100%;height:100%;overflow:hidden;background:radial-gradient(circle at 50% 45%,#08263b 0,#03101d 38%,#020711 75%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:radial-gradient(circle at 50% 45%,#08263b 0,#03101d 38%,#020711 75%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 button,input,textarea,select{font:inherit}
 button{color:var(--text);background:rgba(0,30,48,.72);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
 button:active{transform:scale(.98)}
@@ -540,5 +540,15 @@ window.JARVIS={
  audit:()=>state.audit
 };
 </script>
-</body>
-</html
+<script>
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    try{
+      if(typeof booting!=='undefined') booting=false;
+      if(typeof setStatus==='function') setStatus('ONLINE');
+      if(typeof log==='function') log('BOOT','BOOT WATCHDOG: interface released from initialization.');
+    }catch(e){ console.warn(e); }
+  },4000);
+});
+</script></body>
+</html>
