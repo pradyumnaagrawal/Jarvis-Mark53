@@ -1,175 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MARK-64 V2.1 INDEPENDENT</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>MARK-64 V3 - Mark-LIII Replica</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:#060a12;color:#7dd3e0;font-family:'Share Tech Mono',monospace;overflow:hidden}
-:root{--cyan:#00e5ff;--cyan-dim:rgba(0,229,255,0.18);--green:#00ff88}
-#mark64{height:100vh;display:flex;flex-direction:column;background:radial-gradient(ellipse at 50% 0%,#132034 0%,#0a101c 40%,#05080e 100%);border:1px solid var(--cyan-dim)}
-.topbar{height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--cyan-dim);background:rgba(0,0,0,0.6)}
-.topbar-left{display:flex;align-items:center;gap:16px}
-.status-led{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);animation:ledPulse 1.8s infinite}
-@keyframes ledPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
-.title{font-family:'Orbitron';font-size:13px;letter-spacing:4px;color:var(--cyan);font-weight:800}
-.badge{font-size:8px;padding:4px 10px;border:1px solid var(--cyan-dim);border-radius:14px;background:rgba(0,229,255,0.1);font-family:'JetBrains Mono'}
-.system-info{font-size:10px;opacity:.75;display:flex;gap:14px;font-family:'JetBrains Mono'}
-.topbar-right{display:flex;gap:10px}
-.icon-button{width:36px;height:36px;border:1px solid var(--cyan-dim);background:linear-gradient(180deg,rgba(0,229,255,0.15),rgba(0,229,255,0.04));border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--cyan)}
-.center-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-.reactor-container{position:relative;width:280px;height:280px;display:flex;align-items:center;justify-content:center}
-.ring-outer{position:absolute;width:100%;height:100%;border:1px solid rgba(0,229,255,0.15);border-radius:50%}
-.ring-middle{position:absolute;width:86%;height:86%;border:1px dashed rgba(0,229,255,0.35);border-radius:50%;animation:rotate 26s linear infinite}
-.ring-middle-2{position:absolute;width:74%;height:74%;border:1px solid rgba(255,204,0,0.25);border-radius:50%;animation:rotate 20s linear reverse infinite}
-.ring-inner{position:absolute;width:62%;height:62%;border:1px solid rgba(0,229,255,0.55);border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(0,229,255,0.35),rgba(0,40,90,0.65) 32%,rgba(0,0,0,0.98) 72%)}
-.reactor-core{width:34px;height:34px;background:radial-gradient(circle,#fff,var(--cyan));border-radius:50%;box-shadow:0 0 22px var(--cyan),0 0 45px var(--cyan);animation:coreBeat 1.5s infinite}
-@keyframes coreBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
-@keyframes rotate{to{transform:rotate(360deg)}}
-.particles{position:absolute;width:100%;height:100%;pointer-events:none}
-.particle-dot{position:absolute;width:3px;height:3px;background:var(--cyan);border-radius:50%;opacity:.7;animation:floatParticle 7s infinite;box-shadow:0 0 6px var(--cyan)}
-@keyframes floatParticle{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-20px) translateX(10px)}}
-.waveform-box{width:780px;max-width:95vw;height:78px;margin-top:22px;border:1px solid rgba(0,229,255,0.18);background:rgba(0,0,0,0.4);border-radius:12px;overflow:hidden}
-.status-text{margin-top:14px;font-size:12px;opacity:.9;height:18px;font-family:'JetBrains Mono'}
-.device-control-row{margin-top:16px;display:flex;gap:14px;align-items:center;width:780px;max-width:95vw;padding:10px 14px;background:rgba(0,0,0,0.35);border:1px solid rgba(0,229,255,0.12);border-radius:10px}
-.control-slider{flex:1;display:flex;align-items:center;gap:10px;font-size:9px;font-family:'JetBrains Mono'}
-.control-slider input{flex:1;accent-color:var(--cyan)}
-.input-area{margin-top:16px;width:780px;max-width:95vw;display:flex;gap:10px}
-.input-area input{flex:1;padding:14px 16px;background:rgba(0,20,40,0.8);border:1px solid var(--cyan-dim);border-radius:10px;color:#c8f8ff;font-family:'JetBrains Mono';font-size:13px;outline:none}
-.input-area button{padding:14px 20px;background:linear-gradient(180deg,rgba(0,229,255,0.22),rgba(0,229,255,0.08));border:1px solid rgba(0,229,255,0.4);border-radius:10px;color:var(--cyan);cursor:pointer;font-family:'Orbitron';font-size:10px;font-weight:700}
-.bottom-panel{height:190px;display:flex;border-top:1px solid var(--cyan-dim);background:rgba(0,0,0,0.5);font-family:'JetBrains Mono';font-size:10px}
-.log-panel{flex:1;padding:12px 14px;overflow-y:auto;line-height:1.8;border-right:1px solid var(--cyan-dim)}
-.content-panel{width:440px;padding:12px 14px;overflow-y:auto;background:rgba(10,20,36,0.6)}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:90;display:none}
-.overlay.show{display:block}
-#drawer{position:fixed;top:0;right:-480px;width:460px;height:100vh;background:rgba(10,16,28,0.98);border-left:1px solid var(--cyan-dim);z-index:100;transition:right.4s;display:flex;flex-direction:column}
-#drawer.open{right:0}
-.drawer-header{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--cyan-dim);font-family:'Orbitron';font-size:12px}
-.drawer-tabs{display:flex;gap:6px;padding:12px;flex-wrap:wrap}
-.tab-button{padding:8px;border:1px solid var(--cyan-dim);background:rgba(0,229,255,0.06);border-radius:7px;font-size:8px;text-align:center;cursor:pointer;flex:1;min-width:60px;font-family:'JetBrains Mono'}
-.tab-button.active{background:rgba(0,229,255,0.2);color:var(--cyan)}
-.drawer-body{flex:1;overflow-y:auto;padding:14px}
-.button-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.action-button{padding:12px;border-radius:8px;border:1px solid rgba(0,229,255,0.28);background:linear-gradient(180deg,rgba(0,229,255,0.12),rgba(0,229,255,0.04));color:var(--cyan);font-size:9px;cursor:pointer;font-family:'JetBrains Mono'}
-.action-button-green{border-color:rgba(0,255,136,0.4)!important;background:linear-gradient(180deg,rgba(0,255,136,0.18),rgba(0,255,136,0.06))!important;color:#8effc8!important}
-.small-input{width:100%;padding:11px;border-radius:8px;border:1px solid var(--cyan-dim);background:rgba(0,18,32,0.7);color:#c8f8ff;font-size:11px;margin-top:8px;font-family:'JetBrains Mono'}
+:root{--cyan:#00f2ff;--bg:#050a0e;--panel:rgba(10,20,30,0.85)}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'JetBrains Mono',monospace}
+body{background:radial-gradient(ellipse at center,#0a1a25 0%,#050a0e 100%);color:var(--cyan);height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.reactor{width:280px;height:280px;border-radius:50%;border:2px solid var(--cyan);position:relative;box-shadow:0 0 40px var(--cyan),inset 0 0 40px rgba(0,242,255,0.2);animation:pulse 2s infinite}
+.reactor::before{content:'';position:absolute;top:50%;left:50%;width:60%;height:60%;transform:translate(-50%,-50%);border-radius:50%;border:1px solid var(--cyan);box-shadow:0 0 20px var(--cyan)}
+.core{position:absolute;top:50%;left:50%;width:30%;height:30%;transform:translate(-50%,-50%);background:var(--cyan);border-radius:50%;box-shadow:0 0 30px var(--cyan);animation:core 1.5s infinite alternate}
+@keyframes pulse{0%{box-shadow:0 0 20px var(--cyan)}50%{box-shadow:0 0 60px var(--cyan)}100%{box-shadow:0 0 20px var(--cyan)}}
+@keyframes core{0%{transform:translate(-50%,-50%) scale(1)}100%{transform:translate(-50%,-50%) scale(1.2)}}
+.waveform{margin-top:40px;width:90%;max-width:400px;height:60px;display:flex;align-items:center;justify-content:center;gap:3px}
+.bar{width:4px;height:10px;background:var(--cyan);border-radius:2px;transition:height 0.1s}
+.status{margin-top:20px;font-size:12px;letter-spacing:2px;opacity:0.8}
+.btn{margin-top:30px;padding:12px 30px;border:1px solid var(--cyan);background:transparent;color:var(--cyan);letter-spacing:3px;cursor:pointer;box-shadow:0 0 10px var(--cyan)}
+.btn:hover{background:rgba(0,242,255,0.1)}
+.comms{position:fixed;bottom:20px;width:90%;max-width:400px;background:var(--panel);border:1px solid var(--cyan);padding:15px;backdrop-filter:blur(10px)}
+.input-row{display:flex;gap:10px;margin-top:10px}
+input{flex:1;background:rgba(0,0,0,0.5);border:1px solid var(--cyan);color:var(--cyan);padding:8px}
+.action{padding:8px 12px;border:1px solid var(--cyan);background:transparent;color:var(--cyan);cursor:pointer}
 </style>
 </head>
 <body>
-<div id="mark64">
-<div class="topbar">
-<div class="topbar-left"><div class="status-led"></div><div class="title">MARK-64 V2.1 INDEPENDENT</div><span class="badge" id="memTag">MEM 0</span><span class="badge" id="stateTag">LISTENING</span><span class="badge" id="featTag">INDEPENDENT</span></div>
-<div class="system-info"><span id="time">--:--:--</span><span id="battery">BAT --%</span><span id="cpuInfo">CPU --%</span><span id="ramInfo">RAM --%</span></div>
-<div class="topbar-right"><div class="icon-button" onclick="JARVIS.startVoice()">🎤</div><div class="icon-button" onclick="JARVIS.toggleWakeWord()" id="wakeIcon">👂</div><div class="icon-button" onclick="toggleDrawer()">⚙</div><div class="icon-button" onclick="JARVIS.changeTheme()">🎨</div></div>
-</div>
-<div class="center-area">
-<div class="reactor-container"><div class="ring-outer"></div><div class="ring-middle"></div><div class="ring-middle-2"></div><div class="ring-inner"></div><div class="reactor-core"></div><div class="particles" id="particlesContainer"></div></div>
-<div class="waveform-box"><canvas id="waveformCanvas"></canvas></div>
-<div class="status-text" id="statusText">● V2.1 INDEPENDENT • No MacroDroid • Opens apps by itself</div>
-<div class="device-control-row"><div class="control-slider"><span>☀️ BRIGHT</span><input type="range" id="brightnessSlider" min="10" max="100" value="85" oninput="JARVIS.controlDevice('brightness',this.value)"><span id="brightnessValue">85%</span></div><div class="control-slider"><span>🔊 VOL</span><input type="range" id="volumeSlider" min="0" max="100" value="75" oninput="JARVIS.controlDevice('volume',this.value)"><span id="volumeValue">75%</span></div><div class="icon-button" onclick="JARVIS.controlDevice('flashlight','toggle')" style="width:40px;height:32px">🔦</div><div class="icon-button" onclick="JARVIS.controlDevice('vibrate','')" style="width:40px;height:32px">📳</div><div class="icon-button" onclick="JARVIS.controlDevice('screenshot','')" style="width:40px;height:32px">📸</div></div>
-<div class="input-area"><input id="commandInput" placeholder="Independent: open youtube / open spotify / message mummy hii / call mummy / brightness 100 / flashlight on"><button onclick="JARVIS.executeCommand()">EXECUTE</button><button onclick="JARVIS.startVoice()">VOICE</button></div>
-</div>
-<div class="bottom-panel"><div class="log-panel" id="logPanel"></div><div class="content-panel" id="contentPanel"><b style="color:#00e5ff;font-family:Orbitron">V2.1 INDEPENDENT • NO MACRODROID</b><br><br>Opens apps by itself via Android bridge + Intent<br>Build with Website 2 APK Builder PRO: Allow external apps ON + Auto-click ID com.whatsapp:id/send ON + JS Interface Android ON</div></div>
-</div>
-<div class="overlay" id="overlay" onclick="toggleDrawer()"></div>
-<div id="drawer">
-<div class="drawer-header"><span>V2.1 INDEPENDENT</span><div class="icon-button" onclick="toggleDrawer()">✕</div></div>
-<div class="drawer-tabs"><div class="tab-button active" onclick="openTab('main')">MAIN</div><div class="tab-button" onclick="openTab('device')">DEVICE</div><div class="tab-button" onclick="openTab('comms')">COMMS</div><div class="tab-button" onclick="openTab('media')">MEDIA</div><div class="tab-button" onclick="openTab('system')">SYSTEM</div><div class="tab-button" onclick="openTab('ai')">AI</div></div>
-<div class="drawer-body">
-<div id="tab-main"><div style="font-size:10px;background:rgba(0,0,0,0.4);padding:12px;border-radius:10px;border:1px solid var(--cyan-dim)"><div id="detailTime">Time: --</div><div id="detailBattery">Bat: --</div><div id="detailCpu">CPU: --</div><div>V2.1 Independent • No MacroDroid</div></div><div class="button-grid"><button class="action-button action-button-green" onclick="JARVIS.morningBriefing()">🌅 Briefing</button><button class="action-button" onclick="JARVIS.clearLog()">🧹 Clear</button><button class="action-button" onclick="JARVIS.proactiveCheck()">🔔 Proactive</button><button class="action-button" onclick="JARVIS.readClipboard()">📋 Clipboard</button><button class="action-button" onclick="document.getElementById('fileInput').click()">📂 File</button></div><input type="file" id="fileInput" style="display:none" onchange="JARVIS.handleFileUpload(this.files[0])"></div>
-<div id="tab-device" style="display:none"><div class="button-grid"><button class="action-button action-button-green" onclick="JARVIS.controlDevice('brightness',100)">☀️ Bright 100</button><button class="action-button action-button-green" onclick="JARVIS.controlDevice('brightness',20)">🌙 Bright 20</button><button class="action-button action-button-green" onclick="JARVIS.controlDevice('volume',100)">🔊 Vol 100</button><button class="action-button action-button-green" onclick="JARVIS.controlDevice('flashlight','on')">🔦 Torch ON</button><button class="action-button action-button-green" onclick="JARVIS.controlDevice('flashlight','off')">🔦 Torch OFF</button><button class="action-button" onclick="JARVIS.controlDevice('wifi','toggle')">📶 WiFi</button><button class="action-button" onclick="JARVIS.controlDevice('screenshot','')">📸 Screenshot</button><button class="action-button" onclick="JARVIS.controlDevice('vibrate','')">📳 Vibrate</button><button class="action-button" onclick="JARVIS.controlDevice('gps','')">📍 GPS</button></div></div>
-<div id="tab-comms" style="display:none"><input id="contactNameInput" class="small-input" placeholder="Contact: mummy"><input id="messageTextInput" class="small-input" placeholder="Message: hii"><div class="button-grid"><button class="action-button action-button-green" onclick="JARVIS.saveContact()">💾 Save</button><button class="action-button action-button-green" onclick="JARVIS.sendMessage('whatsapp')">💬 WA Independent</button><button class="action-button action-button-green" onclick="JARVIS.sendMessage('call')">📞 Call</button><button class="action-button action-button-green" onclick="JARVIS.sendMessage('sms')">💬 SMS</button><button class="action-button" onclick="JARVIS.pickContact()">👥 Pick</button></div></div>
-<div id="tab-media" style="display:none"><div class="button-grid"><button class="action-button action-button-green" onclick="JARVIS.openApplication('youtube')">YouTube APP Independent</button><button class="action-button action-button-green" onclick="JARVIS.openApplication('spotify')">Spotify APP</button><button class="action-button action-button-green" onclick="JARVIS.openApplication('whatsapp')">WhatsApp APP</button><button class="action-button action-button-green" onclick="JARVIS.openApplication('maps')">Maps APP</button></div><input id="youtubeSearchInput" class="small-input" placeholder="YouTube search"><button class="action-button action-button-green" onclick="JARVIS.searchYouTube()" style="margin-top:8px;width:100%">Search YouTube</button></div>
-<div id="tab-system" style="display:none"><div id="contactsListDisplay" style="font-size:10px;background:rgba(0,0,0,0.4);padding:12px;border-radius:10px;min-height:90px;border:1px solid var(--cyan-dim)"></div><div class="button-grid"><button class="action-button" onclick="JARVIS.showContacts()">Refresh</button><button class="action-button" onclick="JARVIS.clearAllContacts()">Clear</button></div></div>
-<div id="tab-ai" style="display:none"><div style="font-size:10px;background:rgba(0,0,0,0.4);padding:12px;border-radius:10px;border:1px solid rgba(0,255,136,0.3)"><input id="geminiApiKey" class="small-input" placeholder="Gemini API Key"><button class="action-button action-button-green" onclick="saveGeminiKey()" style="margin-top:8px;width:100%">Save Key</button></div></div>
+<div class="reactor"><div class="core"></div></div>
+<div class="waveform" id="waveform"></div>
+<div class="status" id="statusText">● MARK-64 V3 • STANDBY • SAY "MESSAGE ANYONE"</div>
+<button class="btn" onclick="JARVIS.startListening()">◉ ACTIVATE JARVIS</button>
+
+<div class="comms">
+<div id="contactsList" style="font-size:10px;max-height:60px;overflow:auto"></div>
+<div class="input-row">
+<input id="contactNameInput" placeholder="name or number">
+<input id="messageTextInput" placeholder="message">
+<button class="action" onclick="JARVIS.sendMessage('whatsapp')">WA</button>
+<button class="action" onclick="JARVIS.sendMessage('call')">CALL</button>
+<button class="action" onclick="autoReadMobileContacts()">📲 AUTO READ</button>
 </div>
 </div><script>
-let lastAnswer="",isWakeWordOn=false,wakeWordRecognition=null,currentThemeIndex=0,isWaveformActive=false;
-function saveGeminiKey(){let k=document.getElementById('geminiApiKey').value.trim();if(k){localStorage.setItem('jarvis-gemini-key',k);logEvent('config',{gemini:true});document.getElementById('statusText').innerText='● Key saved';}}
-function createFloatingParticles(){let c=document.getElementById('particlesContainer');for(let i=0;i<14;i++){let d=document.createElement('div');d.className='particle-dot';d.style.left=Math.random()*100+'%';d.style.top=Math.random()*100+'%';d.style.animationDelay=Math.random()*7+'s';c.appendChild(d);}}
-async function askAI(q){document.getElementById('contentPanel').innerHTML=`<span style="color:#00e5ff;font-family:Orbitron">THINKING • V2.1</span><br><br>Q: ${q}<br><br>Searching...`;logEvent('ai_query',{q:q.slice(0,40)});document.getElementById('stateTag').innerText='THINKING';isWaveformActive=true;let ans="";let key=localStorage.getItem('jarvis-gemini-key');try{if(key){let r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:`You are JARVIS MARK-64 V2.1 Independent 40 features. Answer concise witty. User: ${q}`}]}]})});let j=await r.json();ans=j.candidates?.[0]?.content?.parts?.[0]?.text||""}if(!ans){let pr=await fetch(`https://text.pollinations.ai/${encodeURIComponent(`JARVIS V2.1 Independent Q: ${q}`)}`);ans=await pr.text();}}catch(e){ans="AI offline but independent control works. V2.1 has 40 features."}lastAnswer=ans;document.getElementById('contentPanel').innerHTML=`<b style="color:#00e5ff;font-family:Orbitron">JARVIS V2.1 • ${new Date().toLocaleTimeString()}</b><br><br>${ans.replace(/\n/g,'<br>')}`;logEvent('ai_answer',{len:ans.length});isWaveformActive=false;document.getElementById('stateTag').innerText='LISTENING';try{let u=new SpeechSynthesisUtterance(ans.slice(0,260));u.rate=1.05;speechSynthesis.speak(u);}catch{}}
-function logEvent(t,p){let el=document.getElementById('logPanel');let tm=new Date().toLocaleTimeString();let col=t.includes('ai')?'#8effc8':t.includes('device')?'#ffaa00':'#00e5ff';el.innerHTML=`<span style="color:#555">[${tm}]</span> <span style="color:${col}">${t}</span> <span style="opacity:0.6">${JSON.stringify(p).slice(0,90)}</span><br>`+el.innerHTML;let mem=JSON.parse(localStorage.getItem('jarvis-mark64-memory')||'[]');mem.push({t,p,time:tm});localStorage.setItem('jarvis-mark64-memory',JSON.stringify(mem.slice(-300)));document.getElementById('memTag').innerText='MEM '+mem.length;}
-const JARVIS={
-contacts:JSON.parse(localStorage.getItem('jarvis-contacts-v2')||'{}'),
-appMap:{youtube:"https://youtube.com",whatsapp:"https://web.whatsapp.com",gmail:"https://mail.google.com",maps:"https://google.com/maps",spotify:"https://open.spotify.com",netflix:"https://netflix.com",instagram:"https://instagram.com"},
-packageMap:{youtube:"com.google.android.youtube",whatsapp:"com.whatsapp",spotify:"com.spotify.music",maps:"com.google.android.apps.maps",gmail:"com.google.android.gm",instagram:"com.instagram.android"},
+// SECURE - Asks API key on start, stores locally, never in code
+let GEMINI_API_KEY = localStorage.getItem('jarvis-gemini-key') || "";
 
-// INDEPENDENT - NO MACRODROID NEEDED
-openApplication(appName){
-appName=appName.toLowerCase();logEvent('open_app_independent',{app:appName,independent:true});
-let pkg=this.packageMap[appName];
-try{if(window.Android&&Android.openApp&&pkg){Android.openApp(pkg);document.getElementById('statusText').innerText=`● Opening ${appName} APP — Independent — No MacroDroid`;pulseWaveform();return;}}catch(e){}
-try{if(pkg){window.location.href=`intent://#Intent;package=${pkg};end`;document.getElementById('statusText').innerText=`● Opening ${appName} via Intent — Independent`;setTimeout(()=>{let url=this.appMap[appName]||`https://www.google.com/search?q=${encodeURIComponent(appName)}`;window.open(url,'_blank');},900);pulseWaveform();return;}}catch(e){}
-let url=this.appMap[appName]||`https://www.google.com/search?q=${encodeURIComponent(appName)}`;window.open(url,'_blank');pulseWaveform();
-},
-controlDevice(type,val){
-logEvent('computer_settings',{type,val});let st=document.getElementById('statusText');
-try{if(window.Android){if(type=='brightness'&&Android.setBrightness)Android.setBrightness(parseInt(val));if(type=='volume'&&Android.setVolume)Android.setVolume(parseInt(val));if(type=='flashlight'){if(val=='on'||val=='toggle')Android.torchOn();else Android.torchOff();}if(type=='vibrate'&&Android.vibrate)Android.vibrate(250);if(type=='screenshot'&&Android.takeScreenshot)Android.takeScreenshot();st.innerText=`● ${type} ${val} — Independent Real`;pulseWaveform();return;}}catch(e){}
-if(type=='brightness'){let b=parseInt(val)||85;document.documentElement.style.filter=`brightness(${b}%)`;document.getElementById('brightnessSlider').value=b;document.getElementById('brightnessValue').innerText=b+'%';st.innerText=`● Brightness ${b}% — Independent`;}
-else if(type=='volume'){let v=parseInt(val)||75;document.getElementById('volumeSlider').value=v;document.getElementById('volumeValue').innerText=v+'%';st.innerText=`● Volume ${v}% — Independent`;}
-else if(type=='flashlight'){st.innerText=`● Flashlight ${val} — Independent`;}
-else if(type=='vibrate'){if(navigator.vibrate)navigator.vibrate(220);st.innerText=`● Vibrate — Independent`;}
-else if(type=='screenshot'){st.innerText=`● Screenshot — Independent`;}
-else if(type=='gps'){navigator.geolocation.getCurrentPosition(p=>{st.innerText=`● GPS ${p.coords.latitude.toFixed(4)},${p.coords.longitude.toFixed(4)}`;window.open(`https://maps.google.com/?q=${p.coords.latitude},${p.coords.longitude}`,'_blank');});}
-else st.innerText=`● ${type} ${val} — Independent`;
-pulseWaveform();
-},
-youtubeControl(a){if(a=='play')window.open('https://youtube.com','_blank');},
-searchYouTube(){let q=document.getElementById('youtubeSearchInput').value||document.getElementById('commandInput').value;if(!q)return;window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`,'_blank');},
-saveContact(){let name=(document.getElementById('contactNameInput').value.trim().toLowerCase()||'mummy');let num=prompt(`Number for ${name}:`);if(!num)return;num=num.replace(/\D/g,'');if(num.length==10)num='91'+num;this.contacts[name]=num;localStorage.setItem('jarvis-contacts-v2',JSON.stringify(this.contacts));logEvent('save_contact',{name,num});this.showContacts();},
-showContacts(){let el=document.getElementById('contactsListDisplay');let c=this.contacts;el.innerHTML=!Object.keys(c).length?'No contacts':Object.entries(c).map(([k,v])=>`👤 ${k} → ${v}`).join('<br>');},
-clearAllContacts(){if(confirm('Clear?')){this.contacts={};localStorage.removeItem('jarvis-contacts-v2');this.showContacts();}},// INDEPENDENT WHATSAPP - NO MACRODROID
-sendMessage(type){
-let name=document.getElementById('contactNameInput').value.trim().toLowerCase()||'mummy';
-let msg=document.getElementById('messageTextInput').value||'hii';
-let num=this.contacts[name]||this.contacts['mummy'];
-if(!num){let raw=document.getElementById('contactNameInput').value.replace(/\D/g,'');if(raw.length>=10)num=raw.length==10?'91'+raw:raw;}
-if(!num){document.getElementById('statusText').innerText=`● No number for ${name}`;return;}
-logEvent('send_message_independent',{to:name,number:num,type,independent:true});
-try{if(window.Android){if(type=='whatsapp'&&Android.sendWhatsApp){Android.sendWhatsApp(num,msg);document.getElementById('statusText').innerText=`● WhatsApp auto-sent to ${name} — Independent`;pulseWaveform();return;}if(type=='call'&&Android.makeCall){Android.makeCall(num);return;}if(type=='sms'&&Android.sendSms){Android.sendSms(num,msg);return;}}}catch(e){}
-try{if(type=='whatsapp'){window.location.href=`intent://send?phone=${num}&text=${encodeURIComponent(msg)}#Intent;package=com.whatsapp;action=android.intent.action.SENDTO;end`;document.getElementById('statusText').innerText=`● WhatsApp opening for ${name} — Independent — Builder auto-clicks`;setTimeout(()=>{window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`,'_blank');},600);pulseWaveform();return;}}catch(e){}
-if(type=='whatsapp')window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`,'_blank');else if(type=='sms')window.location.href=`sms:${num}?body=${encodeURIComponent(msg)}`;else window.location.href=`tel:${num}`;pulseWaveform();
-},
-webSearch(mode){let q=document.getElementById('commandInput').value||prompt(mode+' query:');if(!q)return;window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`,'_blank');},
-performAction(type){let st=document.getElementById('statusText');if(type=='weather'){window.open('https://www.google.com/search?q=weather+Allahabad','_blank');st.innerText='● Weather — Independent';}else if(type=='reminder'){let r=prompt('Reminder:');if(r){if('Notification' in window){Notification.requestPermission().then(p=>{if(p=='granted')new Notification('JARVIS Reminder',{body:r})});}st.innerText=`● Reminder: ${r}`;}}else if(type=='translate'){let t=prompt('Translate:');if(t)window.open(`https://translate.google.com/?sl=auto&tl=en&text=${encodeURIComponent(t)}`,'_blank');}else if(type=='screen'){if(navigator.mediaDevices?.getDisplayMedia){navigator.mediaDevices.getDisplayMedia({video:true}).then(s=>{st.innerText='● Screen capture — Independent';setTimeout(()=>s.getTracks().forEach(t=>t.stop()),3000);});}}else if(type=='camera'){if(navigator.mediaDevices?.getUserMedia){navigator.mediaDevices.getUserMedia({video:true}).then(s=>{st.innerText='● Camera — Independent';let v=document.createElement('video');v.srcObject=s;v.play();v.style.width='100%';document.getElementById('contentPanel').appendChild(v);setTimeout(()=>s.getTracks().forEach(t=>t.stop()),5000);});}}},
-codeHelper(){let c=prompt('Code help:');if(c)askAI(`Code: ${c}`);},
-handleFileUpload(file){if(!file)return;let reader=new FileReader();reader.onload=e=>{askAI(`File ${file.name}: ${e.target.result.slice(0,2000)}`)};reader.readAsText(file);},
-readClipboard(){if(navigator.clipboard?.readText){navigator.clipboard.readText().then(t=>{if(t)askAI(`Clipboard: ${t.slice(0,500)}`);});}},
-changeTheme(){currentThemeIndex=(currentThemeIndex+1)%3;let colors=[{c:'#00e5ff',bg:'radial-gradient(ellipse at 50% 0%,#132034 0%,#0a101c 40%,#05080e 100%)'},{c:'#ffcc00',bg:'radial-gradient(ellipse at 50% 0%,#2a2200 0%,#1a1400 40%,#0e0a00 100%)'},{c:'#ff2a2a',bg:'radial-gradient(ellipse at 50% 0%,#2a0a0a 0%,#1a0505 40%,#0e0202 100%)'}];document.documentElement.style.setProperty('--cyan',colors[currentThemeIndex].c);document.getElementById('mark64').style.background=colors[currentThemeIndex].bg;},
-proactiveCheck(){askAI('Proactive check '+new Date().toLocaleString());},
-morningBriefing(){askAI(`Morning briefing Allahabad ${new Date().toLocaleString()}`);},
-startVoice(){let Rec=window.SpeechRecognition||window.webkitSpeechRecognition;if(!Rec)return alert('Use Chrome');let rec=new Rec();rec.lang='en-IN';rec.start();document.getElementById('statusText').innerText='● Listening — Independent — Say open youtube / message mummy hii';document.getElementById('stateTag').innerText='LISTENING';isWaveformActive=true;rec.onresult=e=>{let cmd=e.results[0][0].transcript;document.getElementById('commandInput').value=cmd;handleCommand(cmd);};rec.onend=()=>{isWaveformActive=false;};},
-toggleWakeWord(){isWakeWordOn=!isWakeWordOn;document.getElementById('wakeIcon').innerText=isWakeWordOn?'🟢':'👂';if(isWakeWordOn){let Rec=window.SpeechRecognition||window.webkitSpeechRecognition;if(!Rec)return;wakeWordRecognition=new Rec();wakeWordRecognition.continuous=true;wakeWordRecognition.lang='en-IN';wakeWordRecognition.start();wakeWordRecognition.onresult=e=>{let t=e.results[e.results.length-1][0].transcript.toLowerCase();if(t.includes('jarvis')){let cmd=t.replace(/hey jarvis|jarvis/g,'').trim();if(cmd)handleCommand(cmd);}};wakeWordRecognition.onend=()=>{if(isWakeWordOn)wakeWordRecognition.start();};}else wakeWordRecognition?.stop();},
-executeCommand(){handleCommand(document.getElementById('commandInput').value);},
-clearLog(){document.getElementById('logPanel').innerHTML='';},
-pickContact(){},
-exportMemory(){},
-showSystemInfo(){},
-devAgent(){},
-pickVoice(){}
+let JARVIS={
+ contacts:JSON.parse(localStorage.getItem('jarvis-contacts-v2')||'{"mummy":"919876543210"}'),
+
+ askApiKey(){
+   if(GEMINI_API_KEY) return true;
+   let key = prompt("🔑 Enter your Gemini API Key (free from aistudio.google.com):\n\nIt will be saved only on your phone - not in code");
+   if(key && key.length>20){
+     GEMINI_API_KEY = key.trim();
+     localStorage.setItem('jarvis-gemini-key', GEMINI_API_KEY);
+     document.getElementById('statusText').innerText='● API Key Saved - Secure - Local Only';
+     return true;
+   } else {
+     document.getElementById('statusText').innerText='● No API Key - Voice commands still work';
+     return false;
+   }
+ },
+
+ showContacts(){
+   let html=Object.entries(this.contacts).map(([k,v])=>`<span style="margin-right:10px">${k}:${v.slice(-4)}</span>`).join('');
+   document.getElementById('contactsList').innerHTML=html||'No contacts - Click AUTO READ';
+ },
+
+ async startListening(){
+   // ASK API KEY ON FIRST START
+   if(!GEMINI_API_KEY){
+     this.askApiKey();
+   }
+
+   const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+   if(!Speech){alert('Use Chrome/Web2App');return;}
+   let rec=new Speech(); rec.lang='en-IN'; rec.continuous=false;
+   rec.onstart=()=>{document.getElementById('statusText').innerText='● LISTENING...'; pulseWaveform(true);}
+   rec.onresult=(e)=>{let txt=e.results[0][0].transcript; handleCommand(txt); pulseWaveform(false);}
+   rec.start();
+   try{
+     let stream=await navigator.mediaDevices.getUserMedia({audio:true});
+     let ctx=new AudioContext(); let analyser=ctx.createAnalyser();
+     let src=ctx.createMediaStreamSource(stream); src.connect(analyser);
+     let data=new Uint8Array(analyser.frequencyBinCount);
+     setInterval(()=>{analyser.getByteFrequencyData(data); let avg=data.reduce((a,b)=>a+b)/data.length; updateBars(avg);},80);
+   }catch{}
+ },
+
+ sendMessage(type){
+  let name=document.getElementById('contactNameInput').value.trim().toLowerCase();
+  let msg=document.getElementById('messageTextInput').value||'hii';
+  let rawNum=name.replace(/\D/g,''); let num=this.contacts[name];
+  if(rawNum.length>=10 &&!num){num=rawNum.length==10?'91'+rawNum:rawNum; this.contacts[name]=num; localStorage.setItem('jarvis-contacts-v2',JSON.stringify(this.contacts));}
+  if(!num){let n=prompt(`Number for ${name}:`); if(!n)return; n=n.replace(/\D/g,''); if(n.length==10)n='91'+n; this.contacts[name]=n; localStorage.setItem('jarvis-contacts-v2',JSON.stringify(this.contacts)); num=n; this.showContacts();}
+  if(type=='whatsapp'){window.location.href=`https://wa.me/${num}?text=${encodeURIComponent(msg)}`;}
+  else if(type=='call'){window.location.href=`tel:${num}`;}
+  else{window.location.href=`sms:${num}?body=${encodeURIComponent(msg)}`;}
+ },
+
+ openApp(app){
+   let map={youtube:'vnd.youtube://',spotify:'spotify://',instagram:'intent://#Intent;package=com.instagram.android;end'};
+   window.location.href=map[app]||`intent://#Intent;package=com.${app}.android;end`;
+ },
+
+ changeApiKey(){
+   localStorage.removeItem('jarvis-gemini-key');
+   GEMINI_API_KEY="";
+   this.askApiKey();
+ }
 };
-function handleCommand(raw){if(!raw)return;let cmd=raw.toLowerCase().replace(/measage/g,'message').trim();document.getElementById('statusText').innerText=`● Heard: ${raw}`;logEvent('input',{raw});if(cmd.startsWith('message')||cmd.includes('whatsapp')){let cl=cmd.replace(/^message\s*/,'').replace(/\s*whatsapp\s*/,' ').trim();let parts=cl.split(' ').filter(Boolean);let name=parts[0]||'mummy';let msg=parts.slice(1).join(' ')||'hii';document.getElementById('contactNameInput').value=name;document.getElementById('messageTextInput').value=msg;JARVIS.sendMessage('whatsapp');}else if(cmd.includes('call ')||cmd.startsWith('call')){let name=cmd.replace('call','').trim().split(' ')[0]||'mummy';document.getElementById('contactNameInput').value=name;JARVIS.sendMessage('call');}else if(cmd.startsWith('open')){let app=cmd.replace('open','').trim().split(' ')[0];JARVIS.openApplication(app);}else if(cmd.includes('brightness')){let v=cmd.match(/\d+/)?.[0]||'85';JARVIS.controlDevice('brightness',v);}else if(cmd.includes('volume')){let v=cmd.match(/\d+/)?.[0]||'75';JARVIS.controlDevice('volume',v);}else if(cmd.includes('flashlight')||cmd.includes('torch')){let v=cmd.includes('on')?'on':cmd.includes('off')?'off':'toggle';JARVIS.controlDevice('flashlight',v);}else if(cmd.includes('youtube')||cmd.startsWith('play')){JARVIS.openApplication('youtube');}else askAI(raw);}
-function toggleDrawer(){document.getElementById('drawer').classList.toggle('open');document.getElementById('overlay').classList.toggle('show');}
-function openTab(n){document.querySelectorAll('[id^=tab-main],[id^=tab-device],[id^=tab-comms],[id^=tab-media],[id^=tab-system],[id^=tab-ai]').forEach(el=>el.style.display='none');document.getElementById('tab-'+n).style.display='block';document.querySelectorAll('.tab-button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');}
-let waveformCanvas=document.getElementById('waveformCanvas'),waveformContext=waveformCanvas.getContext('2d');
-function initializeWaveform(){let rect=waveformCanvas.getBoundingClientRect();waveformCanvas.width=rect.width*2;waveformCanvas.height=rect.height*2;waveformContext.scale(2,2);drawWaveform();}
-function drawWaveform(){let w=waveformCanvas.getBoundingClientRect().width,h=waveformCanvas.getBoundingClientRect().height;waveformContext.clearRect(0,0,w,h);waveformContext.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--cyan')||'#00e5ff';waveformContext.lineWidth=1.8;waveformContext.shadowBlur=isWaveformActive?20:0;waveformContext.shadowColor=waveformContext.strokeStyle;waveformContext.beginPath();for(let x=0;x<w;x++){let amp=isWaveformActive?Math.sin(x*0.08+Date.now()*0.02)*(24+Math.random()*14):Math.sin(x*0.04+Date.now()*0.0025)*2.5;let y=h/2+amp;if(x===0)waveformContext.moveTo(x,y);else waveformContext.lineTo(x,y);}waveformContext.stroke();waveformContext.shadowBlur=0;requestAnimationFrame(drawWaveform);}
-function pulseWaveform(){isWaveformActive=true;setTimeout(()=>isWaveformActive=false,1400);}
-document.getElementById('commandInput').addEventListener('keydown',(e)=>{if(e.key==='Enter')handleCommand(e.target.value);});
-window.onload=()=>{
-createFloatingParticles();initializeWaveform();JARVIS.showContacts();
-logEvent('boot',{mark:'64 V2.1 Independent',independent:true});
-let contentPanel=document.getElementById('contentPanel');
-contentPanel.addEventListener('dragover',(e)=>{e.preventDefault();});
-contentPanel.addEventListener('drop',(e)=>{e.preventDefault();let f=e.dataTransfer.files[0];if(f)JARVIS.handleFileUpload(f);});
-setInterval(()=>{
-let now=new Date();
-document.getElementById('time').innerText=now.toLocaleTimeString();
-document.getElementById('detailTime').innerText='Time: '+now.toLocaleString();
-if(navigator.getBattery){navigator.getBattery().then(b=>{let pct=Math.round(b.level*100);document.getElementById('battery').innerText='BAT '+pct+'%';document.getElementById('detailBattery').innerText='Bat: '+pct+'%';});}
-},1000);
-};
+
+function updateBars(v){document.querySelectorAll('.bar').forEach(b=>b.style.height=(5+v/8+Math.random()*20)+'px');}
+function pulseWaveform(active){if(!active){document.querySelectorAll('.bar').forEach(b=>b.style.height='10px');}}
+function createBars(){let w=document.getElementById('waveform'); for(let i=0;i<32;i++){let b=document.createElement('div'); b.className='bar'; w.appendChild(b);}}
+createBars(); JARVIS.showContacts();
+
+// AUTO READ MOBILE CONTACTS - Web2App Pro + AppMint
+async function autoReadMobileContacts(){
+ document.getElementById('statusText').innerText='● Reading mobile contacts...';
+ try{
+  if(navigator.contacts && navigator.contacts.select){
+    let contacts=await navigator.contacts.select(['name','tel'],{multiple:true});
+    contacts.forEach(c=>{
+      if(!c.tel[0])return; let tel=c.tel[0].replace(/\D/g,''); if(tel.length==10)tel='91'+tel;
+      let key=c.name[0].toLowerCase().split(' ')[0]; JARVIS.contacts[key]=tel;
+      JARVIS.contacts[c.name[0].toLowerCase()]=tel;
+    });
+    localStorage.setItem('jarvis-contacts-v2',JSON.stringify(JARVIS.contacts));
+    JARVIS.showContacts();
+    document.getElementById('statusText').innerText=`● Loaded ${contacts.length} contacts - ANYONE ready`;
+    return;
+  }
+ }catch(e){console.log(e);}
+ document.getElementById('statusText').innerText='● Click AUTO READ and allow Contacts';
+}<script>
+async function askAI(q){
+ if(!GEMINI_API_KEY){
+   let ok = JARVIS.askApiKey();
+   if(!ok ||!GEMINI_API_KEY){document.getElementById('statusText').innerText='● Need API key for AI - Voice commands still work without it'; return;}
+ }
+ document.getElementById('statusText').innerText='● THINKING...';
+ try{
+   let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,{
+     method:'POST', headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({contents:[{parts:[{text:q}]}]})
+   });
+   let data=await res.json();
+   if(data.error){ if(data.error.message.includes('API_KEY')){localStorage.removeItem('jarvis-gemini-key'); GEMINI_API_KEY=""; document.getElementById('statusText').innerText='● Wrong API Key - Click ACTIVATE again'; return;} throw new Error(data.error.message);}
+   let ans=data.candidates[0].content.parts[0].text;
+   document.getElementById('statusText').innerText='● '+ans.slice(0,80);
+   speechSynthesis.speak(new SpeechSynthesisUtterance(ans));
+ }catch(e){document.getElementById('statusText').innerText='● Error: '+e.message.slice(0,50); console.log(e);}
+}
+function handleCommand(raw){
+ if(!raw)return;
+ let cmd=raw.toLowerCase().trim();
+ document.getElementById('statusText').innerText='● Heard: '+raw;
+ if(cmd.startsWith('message')||cmd.startsWith('msg')||cmd.includes('whatsapp')){
+   let cl=cmd.replace(/^message\s*/,'').replace(/^msg\s*/,'').replace(/on whatsapp/,'').trim();
+   let parts=cl.split(' '); let name=parts[0]; let msg=parts.slice(1).join(' ')||'hii';
+   document.getElementById('contactNameInput').value=name; document.getElementById('messageTextInput').value=msg;
+   JARVIS.sendMessage('whatsapp'); return;
+ }
+ if(cmd.includes('call')){
+   let name=cmd.replace('call','').trim().split(' ')[0]; document.getElementById('contactNameInput').value=name; JARVIS.sendMessage('call'); return;
+ }
+ if(cmd.startsWith('open')||cmd.startsWith('play')){let app=cmd.replace(/open|play/,'').trim().split(' ')[0]; JARVIS.openApp(app); return;}
+ if(cmd.includes('change api')||cmd.includes('api key')){JARVIS.changeApiKey(); return;}
+ askAI(raw);
+}
+</script><script>
+async function askAI(q){
+ if(!GEMINI_API_KEY){
+   let ok = JARVIS.askApiKey();
+   if(!ok ||!GEMINI_API_KEY){document.getElementById('statusText').innerText='● Need API key for AI - Voice commands still work without it'; return;}
+ }
+ document.getElementById('statusText').innerText='● THINKING...';
+ try{
+   let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,{
+     method:'POST', headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({contents:[{parts:[{text:q}]}]})
+   });
+   let data=await res.json();
+   if(data.error){ if(data.error.message.includes('API_KEY')){localStorage.removeItem('jarvis-gemini-key'); GEMINI_API_KEY=""; document.getElementById('statusText').innerText='● Wrong API Key - Click ACTIVATE again'; return;} throw new Error(data.error.message);}
+   let ans=data.candidates[0].content.parts[0].text;
+   document.getElementById('statusText').innerText='● '+ans.slice(0,80);
+   speechSynthesis.speak(new SpeechSynthesisUtterance(ans));
+ }catch(e){document.getElementById('statusText').innerText='● Error: '+e.message.slice(0,50); console.log(e);}
+}
+function handleCommand(raw){
+ if(!raw)return;
+ let cmd=raw.toLowerCase().trim();
+ document.getElementById('statusText').innerText='● Heard: '+raw;
+ if(cmd.startsWith('message')||cmd.startsWith('msg')||cmd.includes('whatsapp')){
+   let cl=cmd.replace(/^message\s*/,'').replace(/^msg\s*/,'').replace(/on whatsapp/,'').trim();
+   let parts=cl.split(' '); let name=parts[0]; let msg=parts.slice(1).join(' ')||'hii';
+   document.getElementById('contactNameInput').value=name; document.getElementById('messageTextInput').value=msg;
+   JARVIS.sendMessage('whatsapp'); return;
+ }
+ if(cmd.includes('call')){
+   let name=cmd.replace('call','').trim().split(' ')[0]; document.getElementById('contactNameInput').value=name; JARVIS.sendMessage('call'); return;
+ }
+ if(cmd.startsWith('open')||cmd.startsWith('play')){let app=cmd.replace(/open|play/,'').trim().split(' ')[0]; JARVIS.openApp(app); return;}
+ if(cmd.includes('change api')||cmd.includes('api key')){JARVIS.changeApiKey(); return;}
+ askAI(raw);
+}
 </script>
-</body>
-</html>
